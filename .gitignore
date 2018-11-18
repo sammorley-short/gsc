@@ -1,3 +1,32 @@
+# Ignore all
+*
+
+# Unignore all with extensions
+!*.*
+
+# Unignore all dirs
+!*/
+
+# Specific filetypes to ignore
+*.csv
+*.json
 *.pyc
 *.png
 *.sublime*
+*.o
+*.so
+.DS_Store
+
+# Nauty directories to ignore
+nauty25r9
+nauty
+
+# Virtualenv directories to ignore
+bin
+include
+lib
+man
+share
+.Python
+pip-selfcheck.json
+thebigselfdualfile.txt

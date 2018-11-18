@@ -1,0 +1,2 @@
+# Below states the pynauty-hack git commit SHA on which the code relies
+7baf65ef8fb6509323ac08c733c1dd99ba3df208
