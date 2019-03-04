@@ -5,11 +5,10 @@ import unittest
 import pynauty as pyn
 import networkx as nx
 # Local modules
-sys.path.append('..')
-from get_nauty import find_unique_lcs, convert_nx_to_pyn, hash_graph, \
-    canonical_relabel
-from explore_class import local_complementation
-from utils import canonical_edge_order
+from gsc.get_nauty import find_rep_nodes, hash_graph, canonical_relabel
+from gsc.explore_lc_orbit import qubit_LC
+from gsc.graph_builders import create_prime_power_graph
+from gsc.utils import canonical_edge_order
 
 
 def gen_random_connected_graph(n, p=0.1):
@@ -35,12 +34,12 @@ class TestGetNauty(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_find_unique_lcs(self):
+    def test_find_rep_nodes(self):
         for _ in range(100):
             g = gen_random_connected_graph(10)
-            g_equivs = find_unique_lcs(g)
+            g_equivs = find_rep_nodes(g)
             for rep_node, equiv_nodes in g_equivs.iteritems():
-                lc_equiv_graphs = [local_complementation(g, node)
+                lc_equiv_graphs = [qubit_LC(g, node)
                                    for node in equiv_nodes]
                 lc_equiv_hashes = list(set(map(hash_graph, lc_equiv_graphs)))
                 self.assertEqual(len(lc_equiv_hashes), 1)
@@ -66,13 +65,36 @@ class TestGetNauty(unittest.TestCase):
             canon_relab_edges = canonical_edge_order(canon_relab_g.edges())
             self.assertEqual(canon_edges, canon_relab_edges)
 
+    def test_prime_power_hash_examples(self):
+        # Tests that two C-shaped prime power graphs are equivalent
+        prime, power = 2, 2
+        e1 = [((0, 1), (1, 1), 1), ((1, 0), (0, 0), 1), ((0, 0), (0, 1), 1)]
+        e2 = [((0, 1), (1, 1), 1), ((1, 0), (0, 0), 1), ((1, 0), (1, 1), 1)]
+        g1 = create_prime_power_graph(e1, prime, power)
+        g2 = create_prime_power_graph(e2, prime, power)
+        self.assertEqual(hash_graph(g1), hash_graph(g2))
+
+        # Tests upper ququart bar and lower ququart bar inequivalent
+        e1 = [((1, 0), (0, 0), 1)]
+        e2 = [((0, 1), (1, 1), 1)]
+        g1 = create_prime_power_graph(e1, prime, power)
+        g2 = create_prime_power_graph(e2, prime, power)
+        self.assertNotEqual(hash_graph(g1), hash_graph(g2))
+
+        # Tests both ququart zigzags are equivalent
+        e1 = [((0, 1), (1, 1), 1), ((1, 0), (0, 0), 1), ((0, 0), (1, 1), 1)]
+        e2 = [((0, 1), (1, 1), 1), ((1, 0), (0, 0), 1), ((0, 1), (1, 0), 1)]
+        g1 = create_prime_power_graph(e1, prime, power)
+        g2 = create_prime_power_graph(e2, prime, power)
+        self.assertEqual(hash_graph(g1), hash_graph(g2))
+
+        # Checks two-bar and rotated two-bar ququarts are inequivalent
+        e1 = [((0, 1), (1, 1), 1), ((0, 0), (1, 0), 1)]
+        e2 = [((0, 0), (0, 1), 1), ((1, 0), (1, 1), 1)]
+        g1 = create_prime_power_graph(e1, prime, power)
+        g2 = create_prime_power_graph(e2, prime, power)
+        self.assertNotEqual(hash_graph(g1), hash_graph(g2))
+
 
 if __name__ == '__main__':
     unittest.main()
-
-    # for _ in range(10):
-    #     g = gen_random_connected_graph(4)
-    #     relab_g = random_relabel(g)
-    #     print g.edges()
-    #     print relab_g.edges()
-    #     print g.edges() == relab_g.edges()

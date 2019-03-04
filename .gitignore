@@ -7,7 +7,7 @@
 # Unignore all dirs
 !*/
 
-# Specific filetypes to ignore
+# Specific filetypes
 *.csv
 *.json
 *.pyc
@@ -16,17 +16,6 @@
 *.o
 *.so
 .DS_Store
-
-# Nauty directories to ignore
-nauty25r9
-nauty
-
-# Virtualenv directories to ignore
-bin
-include
-lib
-man
-share
-.Python
-pip-selfcheck.json
-thebigselfdualfile.txt
+build
+dist
+gsc.egg-info

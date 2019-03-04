@@ -5,12 +5,11 @@ import unittest
 import networkx as nx
 from abp import GraphState
 # Local modules
-sys.path.append('..')
-import viz
-from graph_builders import linear_graph, make_crazy
-from utils import to_GraphState
+import gsc.viz as viz
+from gsc.graph_builders import linear_graph, make_crazy
+from gsc.utils import to_GraphState
 
-url = "https://abv.peteshadbolt.co.uk/beam-robot-reckless-facade"
+URL = "https://abv.peteshadbolt.co.uk/beam-robot-reckless-facade"
 
 
 def encode_dict(d, codec='utf8'):
@@ -51,13 +50,13 @@ class TestGraphViz(unittest.TestCase):
         # Creates linear graph
         g = linear_graph(10)
         # Pushes to abv
-        viz.push_graph_to_abv(g, url=url)
+        viz.push_graph_to_abv(g, url=URL)
         # Checks pulled graph same as pushed
         gs1 = to_GraphState(g)
         gs1_nodes = {str(key): value for key, value in gs1.node.items()}
         gs1_edges = sorted(gs1.edgelist())
         # Gets pushed graph state nodes & edges
-        gs2_nodes, gs2_edges = pull_GraphState_nodes_edges(url)
+        gs2_nodes, gs2_edges = pull_GraphState_nodes_edges(URL)
         self.assertEqual(gs1_nodes, gs2_nodes)
         self.assertEqual(gs1_edges, gs2_edges)
 
@@ -68,13 +67,13 @@ class TestGraphViz(unittest.TestCase):
         g = linear_graph(10)
         cg = make_crazy(g, 10)
         # Pushes to abv
-        viz.push_graph_to_abv(cg, url=url)
+        viz.push_graph_to_abv(cg, url=URL)
         # Checks pulled graph same as pushed
         gs1 = to_GraphState(cg)
         gs1_nodes = {str(key): value for key, value in gs1.node.items()}
         gs1_edges = sorted(gs1.edgelist())
         # Gets pushed graph state nodes & edges
-        gs2_nodes, gs2_edges = pull_GraphState_nodes_edges(url)
+        gs2_nodes, gs2_edges = pull_GraphState_nodes_edges(URL)
         self.assertEqual(gs1_nodes, gs2_nodes)
         self.assertEqual(gs1_edges, gs2_edges)
 

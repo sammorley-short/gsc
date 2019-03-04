@@ -1,12 +1,23 @@
 # Python packages
 import ast
 import numpy as np
+from math import sqrt
 from itertools import chain, combinations
 from collections import defaultdict
 from math import pi, cos, sin
 from abp import GraphState
 from abp.util import xyz
 # Local modules
+
+
+def copy_graph(graph):
+    """ Returns copy of graph including graph attributes """
+    graph_copy = graph.copy()
+    attrs = set(dir(graph))
+    attrs_copy = set(dir(graph_copy))
+    for attr in attrs - attrs_copy:
+        graph_copy.__dict__[attr] = graph.__dict__[attr]
+    return graph_copy
 
 
 def canonical_edge_order(edges):
@@ -31,7 +42,7 @@ def to_GraphState(graph, r=0.2):
     If graph is crazy, lays out crazy nodes radially.
     """
     # Defines qubits and coordinates for crazy or normal graph
-    if hasattr(graph, 'crazy'):
+    if hasattr(graph, 'encoded'):
         crazy_nodes = defaultdict(list)
         for node in graph.nodes():
             crazy_nodes[node[0]].append(node)
@@ -68,4 +79,20 @@ def flatten(array, level=1):
 
 
 def powerset(s):
-    return chain.from_iterable(combinations(s, r) for r in range(1, len(s) + 1))
+    """ Returns the powerset of a list (excl. the empty set) """
+    return chain.from_iterable(combinations(s, r)
+                               for r in range(1, len(s) + 1))
+
+
+def int_to_bits(i):
+    """ Converts integer into list of bits """
+    return [int(x) for x in bin(i)[2:]]
+
+
+def is_prime(a):
+    if a < 2:
+        return False
+    for x in range(2, int(sqrt(a)) + 1):
+        if a % x == 0:
+            return False
+    return True
