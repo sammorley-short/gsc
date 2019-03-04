@@ -4,6 +4,8 @@ Version 2.0
 
 *by Sam Morley-Short*
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2582616.svg)](https://doi.org/10.5281/zenodo.2582616)
+
 ## Why gsc?
 
 "gsc" or "graph state compass" is a Python package containing a number of tools used for mapping and depicting the local Clifford equivalence classes of quantum graph states.
