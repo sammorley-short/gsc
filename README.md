@@ -110,7 +110,7 @@ For example, consider checking the local equivalence between some set of 4-qubit
 # Import Python packages
 import networkx as nx
 # Import local modules
-from is_lc_equiv import are_lc_equiv
+from gsc.is_lc_equiv import are_lc_equiv
 
 # Create a linear 4 node graph
 edges = [(0, 1), (1, 2), (2, 3)]
@@ -158,8 +158,8 @@ For example, the following snippet can be used to export the equivalence class o
 
 ```python
 # Import the prime graph state builder and class explorer and exporter
-from graph_builders import create_prime_graph
-from explore_lc_orbit import explore_lc_orbit, export_class_graph
+from gsc.graph_builders import create_prime_graph
+from gsc.explore_lc_orbit import explore_lc_orbit, export_class_graph
 # Create the input graph
 prime = 3
 w_edges = [(0, 1, 1), (1, 2, 2)]
@@ -180,8 +180,8 @@ In this case, the local complementation operation is replaced with the so-called
 
 ```python
 # Import the pseudo graph state builder and class explorer and exporter
-from psuedo_graphs import gen_psuedo_graph_edge_map, create_psuedo_graph, psuedo_to_real
-from explore_lc_orbit import explore_lc_orbit, export_class_graph
+from gsc.psuedo_graphs import gen_psuedo_graph_edge_map, create_psuedo_graph, psuedo_to_real
+from gsc.explore_lc_orbit import explore_lc_orbit, export_class_graph
 # Create the initial prime-power pseudo graph state
 prime, power = 2, 2
 c_map = gen_psuedo_graph_edge_map(prime, power)
