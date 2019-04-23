@@ -1,6 +1,6 @@
 # gsc (graph-state compass)
 
-Version 2.0
+Version 2.0.1
 
 *by Sam Morley-Short*
 
