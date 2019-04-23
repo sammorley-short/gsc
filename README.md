@@ -52,7 +52,7 @@ For example, the following snippet of code will find the LC-equivalence class of
 # Import Python packages
 import networkx as nx
 # Import local modules
-from explore_class import explore_lc_orbit, export_class_graph
+from gsc.explore_class import explore_lc_orbit, export_class_graph
 
 # Create the input graph
 edges = [(0, 1), (1, 2), (2, 3), (3, 4)]
