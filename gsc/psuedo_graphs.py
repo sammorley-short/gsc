@@ -1,8 +1,7 @@
+from __future__ import print_function
 # Python modules
 import networkx as nx
 import itertools as it
-# Local modules
-from gsc.utils import powerset
 
 
 def gen_psuedo_graph_edge_map(prime, power):
@@ -12,7 +11,7 @@ def gen_psuedo_graph_edge_map(prime, power):
     two m-families).
     """
     edges = ([(u, v, w) for w in range(1, prime)] + [()]
-             for u, v in it.product(range(power), repeat=2))
+             for u, v in it.product(list(range(power)), repeat=2))
     edge_sets = ([edge for edge in edge_set if edge != ()]
                  for edge_set in it.product(*edges))
     c_map = {i: edges for i, edges in enumerate(sorted(edge_sets, key=len))}
@@ -58,14 +57,14 @@ def real_graph_to_psu_edges(real_g, c_map, psu_edge_index):
     index
     """
     # Creates inverse colour map for psuedo edges
-    inv_c_map = {tuple(sorted(value)): key for key, value in c_map.items()}
+    inv_c_map = {tuple(sorted(value)): key for key, value in list(c_map.items())}
     # Gets configuration of real edges per psuedo edge
     psu_edges = {edge: [] for edge in psu_edge_index}
     m = real_g.power
     for u, v in psu_edge_index:
         # Gets edges of inter-family bipartite graph
         bpg_edges = [(i, j, real_g[(u, i)][(v, j)]['weight'])
-                     for i, j in it.product(range(m), repeat=2)
+                     for i, j in it.product(list(range(m)), repeat=2)
                      if real_g.has_edge((u, i), (v, j))]
         if bpg_edges != []:
             psu_edges[(u, v)] = bpg_edges
@@ -91,4 +90,4 @@ def real_to_psuedo(real_g, c_map, psu_edge_index=None):
 
 if __name__ == '__main__':
     prime, power = 3, 1
-    print gen_psuedo_graph_edge_map(prime, power)
+    print(gen_psuedo_graph_edge_map(prime, power))

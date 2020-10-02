@@ -1,8 +1,6 @@
 # Python packages
-import sys
 import random
 import unittest
-import pynauty as pyn
 import networkx as nx
 # Local modules
 from gsc.get_nauty import find_rep_nodes, hash_graph, canonical_relabel
@@ -38,7 +36,7 @@ class TestGetNauty(unittest.TestCase):
         for _ in range(100):
             g = gen_random_connected_graph(10)
             g_equivs = find_rep_nodes(g)
-            for rep_node, equiv_nodes in g_equivs.iteritems():
+            for rep_node, equiv_nodes in g_equivs.items():
                 lc_equiv_graphs = [qubit_LC(g, node)
                                    for node in equiv_nodes]
                 lc_equiv_hashes = list(set(map(hash_graph, lc_equiv_graphs)))

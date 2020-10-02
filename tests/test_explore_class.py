@@ -1,10 +1,8 @@
 # Python packages
-import sys
 import random
 import unittest
 import networkx as nx
 from abp import GraphState
-from pprint import pprint
 # Local modules
 from gsc.utils import canonical_edge_order
 from gsc.is_lc_equiv import are_lc_equiv
@@ -73,9 +71,9 @@ class TestExploreClass(unittest.TestCase):
             g = gen_random_connected_graph(7)
             class_graph = explore_lc_orbit(g, verbose=False)
             orbit_hashes = set([graph['hash'] for graph
-                                in class_graph.node.values()])
-            self.assertEqual(len(class_graph.node), len(orbit_hashes))
-            graphs = [graph['nx_graph'] for graph in class_graph.node.values()]
+                                in class_graph.nodes.values()])
+            self.assertEqual(len(class_graph.nodes), len(orbit_hashes))
+            graphs = [graph['nx_graph'] for graph in class_graph.nodes.values()]
             for i in range(10):
                 graph_a = random.choice(graphs)
                 graph_b = random.choice(graphs)
@@ -89,7 +87,7 @@ class TestExploreClass(unittest.TestCase):
         graph = create_prime_power_graph(edges, 2, 2)
         class_graph = explore_lc_orbit(graph, verbose=False)
         register = set(tuple(map(tuple, attrs['edges']))
-                       for node, attrs in class_graph.node.iteritems())
+                       for node, attrs in class_graph.nodes.items())
         target = \
             [(((0, 1), (1, 0), 1), ((0, 0), (1, 1), 1)),
              (((0, 1), (1, 0), 1), ((0, 1), (1, 1), 1), ((0, 0), (1, 1), 1)),
@@ -97,13 +95,14 @@ class TestExploreClass(unittest.TestCase):
              (((0, 1), (1, 1), 1), ((1, 0), (0, 0), 1)),
              (((0, 1), (1, 1), 1), ((1, 0), (0, 0), 1), ((0, 0), (1, 1), 1))]
         target = set(target)
+
         self.assertEqual(register, target)
         # Tests second equivalence class
         edges = [((0, 0), (1, 0), 1)]
         graph = create_prime_power_graph(edges, 2, 2)
         class_graph = explore_lc_orbit(graph, verbose=False)
         register = set(tuple(map(tuple, attrs['edges']))
-                       for node, attrs in class_graph.node.iteritems())
+                       for node, attrs in class_graph.nodes.items())
         target = \
             [(((0, 1), (1, 0), 1),),
              (((0, 1), (1, 0), 1), ((0, 1), (1, 1), 1)),

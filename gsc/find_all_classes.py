@@ -1,19 +1,18 @@
+from __future__ import print_function
+from __future__ import division
 # Python modules
+from past.utils import old_div
 import os
 import csv
 import sys
-import time
 import numpy as np
-import networkx as nx
-import itertools as it
 from time import time
 from tqdm import tqdm
-from random import shuffle
 from pprint import pprint
 # Local modules
 from gsc.get_nauty import hash_graph
 from gsc.psuedo_graphs import *
-from gsc.explore_lc_orbit import explore_lc_orbit, export_class_register
+from gsc.explore_lc_orbit import explore_lc_orbit
 
 
 def init_search_database(prime, power, nodes):
@@ -26,7 +25,7 @@ def init_search_database(prime, power, nodes):
     if not os.path.exists(directory + '/classes'):
         os.makedirs(directory + '/classes')
     # Writes edge index (used for edge configurations) to file
-    all_edges = list(it.combinations(range(nodes), 2))
+    all_edges = list(it.combinations(list(range(nodes)), 2))
     filename = directory + '/edge_index.csv'
     with open(filename, 'w') as file:
         writer = csv.writer(file)
@@ -37,8 +36,8 @@ def init_search_database(prime, power, nodes):
         writer = csv.writer(file)
         writer.writerow([prime, power, nodes])
     # Writes complete list of edge configs to file
-    max_edges = nodes * (nodes - 1) / 2
-    all_edge_configs = it.product(range(prime ** (power ** 2)),
+    max_edges = old_div(nodes * (nodes - 1), 2)
+    all_edge_configs = it.product(list(range(prime ** (power ** 2))),
                                   repeat=max_edges)
     edge_configs = \
         it.ifilter(lambda a: (max_edges - a.count(0)) >= (nodes - 1),
@@ -49,7 +48,7 @@ def init_search_database(prime, power, nodes):
     np.savetxt(filename, edge_configs, fmt='%d', delimiter=',')
     # If prime-power, writes psuedo-edge map to file
     if power > 1:
-        c_map = gen_psuedo_graph_edge_map(prime, power).items()
+        c_map = list(gen_psuedo_graph_edge_map(prime, power).items())
         filename = directory + '/psuedo_edge_map.csv'
         with open(filename, 'w') as file:
             writer = csv.writer(file)
@@ -73,7 +72,7 @@ def get_next_graph(directory):
 
 def remove_found_graphs(directory, edge_configs):
     """ Removes any found graphs from remaining_graphs.txt """
-    edge_configs = [map(str, config) for config in edge_configs]
+    edge_configs = [list(map(str, config)) for config in edge_configs]
     filename = directory + '/remaining_graphs.csv'
     tmp_filename = directory + '/remaining_graphs_tmp.csv'
     # Reads configs from file and writes any not in found configs to temp.
@@ -102,7 +101,7 @@ def write_hashes(directory, hashes):
     # If none have been found, write hashes to file
     hashes = set(hashes)
     if hashes - found_hashes == hashes:
-        hashes = map(lambda h: str(h) + '\n', hashes)
+        hashes = [str(h) + '\n' for h in hashes]
         with open(filename, 'a+') as file:
             file.writelines(hashes)
     # If only a subset of the hashes have been found raise an error
@@ -126,7 +125,7 @@ def found_hash(directory, target_hash):
 def make_isomorph_func(edge_index, n):
     """ Returns function that makes isomorphic graph edge configurations """
     node_maps = [{i: j for i, j in enumerate(perm)}
-                 for perm in it.permutations(range(n), n)]
+                 for perm in it.permutations(list(range(n)), n)]
     iso_indices = [[tuple(sorted([n_map[i], n_map[j]])) for i, j in edge_index]
                    for n_map in node_maps]
     config_perms = [[edge_index.index(edge) for edge in index]
@@ -135,7 +134,7 @@ def make_isomorph_func(edge_index, n):
     def isomorph_configs(edge_config):
         iso_configs = [tuple(edge_config[i] for i in perm)
                        for perm in config_perms]
-        iso_configs = map(list, set(iso_configs))
+        iso_configs = list(map(list, set(iso_configs)))
         return iso_configs
 
     return isomorph_configs
@@ -146,7 +145,7 @@ def remove_disconnected_configs(edge_config, isomorph_configs):
     # Finds the edge occupancies of all isomorphic configurations
     iso_occs = set(tuple(map(bool, config))
                    for config in isomorph_configs(edge_config))
-    iso_occs = map(list, list(iso_occs))
+    iso_occs = list(map(list, list(iso_occs)))
     filename = directory + '/remaining_graphs.csv'
     tmp_filename = directory + '/remaining_graphs_tmp.csv'
     # Reads configs from file and writes any not in found configs to temp.
@@ -173,7 +172,7 @@ def find_all_classes(directory):
     filename = directory + '/state_params.csv'
     with open(filename, 'r') as file:
         reader = csv.reader(file)
-        p, m, n = map(int, next(reader))
+        p, m, n = list(map(int, next(reader)))
     c_map = gen_psuedo_graph_edge_map(p, m)
     # Creates function to produce config isomorphs
     isomorph_configs = make_isomorph_func(edge_index, n)
@@ -183,7 +182,7 @@ def find_all_classes(directory):
     rg_file = directory + '/remaining_graphs.csv'
     rem_graphs_size = os.path.getsize(rg_file)
     pbar = tqdm(total=rem_graphs_size)
-    print rem_graphs_size
+    print(rem_graphs_size)
     while True:
         rem_update = rem_graphs_size - os.path.getsize(rg_file)
         if rem_update >= 0:
@@ -217,8 +216,8 @@ def find_all_classes(directory):
         class_graph = explore_lc_orbit(init_graph, False, False)
         class_register = [[node, attrs['edges'],
                            attrs['hash'], attrs['nx_graph']]
-                          for node, attrs in class_graph.node.iteritems()]
-        nodes, edges, hashes, graphs = zip(*class_register)
+                          for node, attrs in class_graph.nodes.items()]
+        nodes, edges, hashes, graphs = list(zip(*class_register))
         # Formats edge list based on state parameters
         if power == 1:
             edges = [[(u, v, c) for (u, i), (v, j), c in edge_set]
@@ -228,7 +227,7 @@ def find_all_classes(directory):
                      for edge_set in edges]
         # Exports class_register to file
         tqdm.write("Writing register to file...")
-        class_register = zip(nodes, edges, hashes)
+        class_register = list(zip(nodes, edges, hashes))
         config_label = '_'.join(map(str, edge_config))
         filename = directory + '/classes/' + config_label + '.csv'
         with open(filename, 'w') as csvfile:
@@ -252,14 +251,14 @@ if __name__ == '__main__':
     prime = 2
     power = 2
     nodes = 3
-    print prime, power, nodes
+    print(prime, power, nodes)
     init_search_database(prime, power, nodes)
     directory = 'class_databases/' + \
         'prime_power_p%d_m%d_n%d' % (prime, power, nodes)
 
-    print "Searching"
+    print("Searching")
     start = time()
     find_all_classes(directory)
     end = time() - start
-    runtime = (int(end / 60), int(end % 60))
-    print "Runtime: %dm %ds" % runtime
+    runtime = (int(old_div(end, 60)), int(end % 60))
+    print("Runtime: %dm %ds" % runtime)

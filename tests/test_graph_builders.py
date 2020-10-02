@@ -1,5 +1,4 @@
 # Python packages
-import sys
 import unittest
 import networkx as nx
 import itertools as it

@@ -2,11 +2,9 @@
 from math import log
 import networkx as nx
 import pynauty as pyn
-from pprint import pprint
 from collections import defaultdict
-import matplotlib.pyplot as plt
 # Local modules
-from gsc.utils import flatten, int_to_bits, copy_graph
+from gsc.utils import int_to_bits, copy_graph
 
 
 def qudit_graph_map(nx_wg, partition=None):
@@ -15,9 +13,9 @@ def qudit_graph_map(nx_wg, partition=None):
     For prime-power graph states, can colour by member or family.
     """
     # Gets list of all nodes by layer
-    us, vs, weights = zip(*nx_wg.edges.data('weight'))
+    us, vs, weights = list(zip(*nx_wg.edges.data('weight')))
     n_layers = int(log(max(weights), 2)) + 1
-    layers = range(n_layers)
+    layers = list(range(n_layers))
     # If node is prime power, applies colouring across same member-nodes
     if nx_wg.__dict__.get('power', 1) > 1:
         p, m, f = nx_wg.prime, nx_wg.power, nx_wg.families
@@ -72,11 +70,11 @@ def convert_nx_to_pyn(nx_g, partition=None):
     if nx_g.__dict__.get('dimension', 2) > 2:
         nx_g, coloring = qudit_graph_map(nx_g, partition)
     # Relabels nodes with integers for compatibility with Pynauty
-    nodes, neighs = zip(*nx_g.adjacency())
+    nodes, neighs = list(zip(*nx_g.adjacency()))
     to_int_node_map = {n: i for i, n in enumerate(nodes)}
     relabel = to_int_node_map.get
-    nodes = map(relabel, nodes)
-    neighs = [map(relabel, node_neighs.keys()) for node_neighs in neighs]
+    nodes = list(map(relabel, nodes))
+    neighs = [list(map(relabel, list(node_neighs.keys()))) for node_neighs in neighs]
     coloring = [set(map(relabel, colour)) for colour in coloring]
     # Creates Pynauty graph
     graph_adj = {node: node_neighs for node, node_neighs in zip(nodes, neighs)}
@@ -84,7 +82,7 @@ def convert_nx_to_pyn(nx_g, partition=None):
     pyn_g = pyn.Graph(n_v, directed=False, adjacency_dict=graph_adj,
                       vertex_coloring=coloring)
     # Finds inverse node labelling
-    from_int_node_map = {i: n for n, i in to_int_node_map.items()}
+    from_int_node_map = {i: n for n, i in list(to_int_node_map.items())}
     return pyn_g, from_int_node_map
 
 
@@ -103,8 +101,12 @@ def hash_graph(graph):
 
 
 def canonical_relabel(nx_g):
-    """ Returns isomorphic graph with canonical relabelling """
-    nodes, neighs = zip(*nx_g.adjacency())
+    """ Returns isomorphic graph with canonical relabelling
+
+    Note: Function is broken and not actually used either.
+
+    """
+    nodes, neighs = list(zip(*nx_g.adjacency()))
     pyn_g, node_map = convert_nx_to_pyn(nx_g)
     canon_lab = pyn.canon_label(pyn_g)
     canon_relab = {node_map[o_node]: i_node for i_node, o_node
@@ -126,11 +128,14 @@ def find_rep_nodes(nx_g):
     node_equivs = defaultdict(list)
     for node, equiv in enumerate(orbits):
         node_equivs[node_map[equiv]].append(node_map[node])
-    # Removes any LC's that act trivially on the graph (i.e. act on d=1 nodes)
-    node_equivs = {node: equivs for node, equivs in node_equivs.iteritems()
-                   if nx_g.degree(node) > 1}
+
     # If multigraph, returns orbits of nodes in first layer
     if nx_g.__dict__.get('dimension', 2) > 2:
         node_equivs = {u: [v for l_v, v in equivs if l_v == 0]
-                       for (l_u, u), equivs in node_equivs.items() if l_u == 0}
+                       for (l_u, u), equivs in list(node_equivs.items()) if
+                       l_u == 0}
+    else:
+        node_equivs = {node: equivs for node, equivs in node_equivs.items()
+                       if nx_g.degree(node) > 1}
+
     return node_equivs

@@ -1,18 +1,18 @@
+from __future__ import print_function
+from __future__ import division
 # Python packages
-import os
+from past.utils import old_div
 import csv
 import sympy as sp
 import numpy as np
 import networkx as nx
 import itertools as it
-from pprint import pprint
-from ast import literal_eval
-from subprocess import check_output
+
 # Local modules
 from gsc.utils import canonical_edge_order, flatten, powerset
 
-bin2gate = {(1, 0, 0, 1): 'I', (0, 1, 1, 0): 'H', (1, 0, 1, 1): 'S',
-            (1, 1, 1, 0): 'HS', (0, 1, 1, 1): 'SH', (1, 1, 0, 1): 'HSH'}
+bin2gate = {(1, 0, 0, 1): 'I', (0, 1, 1, 0): 'H', (1, 1, 0, 1): 'S',
+            (0, 1, 1, 1): 'HS', (1, 1, 1, 0): 'SH', (1, 0, 1, 1): 'HSH'}
 
 
 def get_adjacency_matrix(graph):
@@ -59,7 +59,7 @@ def to_rref(A):
                     A[[x, i]] = A[[i, x]]
                     break
         # Divide each element of row i by a_ij, thus making the pivot a_ij = 1.
-        A[i] /= A[i, j]
+        A[i] //= A[i, j]
         # For each row k from 1 to n, with k != i,
         # subtract row i multiplied by a_kj from row k.
         for k in [k for k in range(n) if k != i]:
@@ -83,8 +83,8 @@ def GF2nullspace(A):
     I = np.eye(n, dtype=int)
     for i in range(n):
         while A[:, i].tolist() != I[:, i].tolist():
-            perm = range(i, m)
-            A[:, perm] = A[:, range(i + 1, m) + [i]]
+            perm = list(range(i, m))
+            A[:, perm] = A[:, list(range(i + 1, m)) + [i]]
             perms.append(perm)
     P = A[:, n:]
     # N(A) is spanned by [P^T | I_k ] (P^T is k x n and I_k is k x k)
@@ -105,7 +105,7 @@ def are_lc_equiv(g1, g2):
     am2, k2 = get_adjacency_matrix(g2)
     dim1, dim2 = len(k1), len(k2)
     if k1 != k2 or am1.shape != (dim1, dim1) or am2.shape != (dim2, dim2):
-        raise False, None
+        raise False
     # Defines binary matrices
     I = sp.eye(dim1)
     S1 = sp.Matrix(am1).col_join(I)
@@ -116,9 +116,9 @@ def are_lc_equiv(g1, g2):
     C = sp.symbols('c:' + str(dim1), bool=True)
     D = sp.symbols('d:' + str(dim1), bool=True)
     # Defines solution matrix basis
-    abcd = flatten(zip(A, B, C, D))
+    abcd = flatten(list(zip(A, B, C, D)))
     no_vars = len(abcd)
-    no_qubits = no_vars / 4
+    no_qubits = old_div(no_vars, 4)
     # Creates symbolic binary matrix
     A, B, C, D = sp.diag(*A), sp.diag(*B), sp.diag(*C), sp.diag(*D)
     Q = A.row_join(B).col_join(C.row_join(D))
@@ -149,11 +149,11 @@ if __name__ == '__main__':
     g1 = nx.Graph(e1)
     e2 = [(0, 1), (1, 2), (2, 0)]
     g2 = nx.Graph(e2)
-    print are_lc_equiv(g1, g2)
+    print(are_lc_equiv(g1, g2))
 
     e1 = [(0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (1, 2), (1, 3),
           (1, 4), (1, 5), (2, 3), (2, 4), (2, 5), (3, 4), (3, 5), (4, 5)]
     e2 = [(0, 1), (0, 2), (0, 3), (0, 4), (0, 5)]
     g1 = nx.Graph(e1)
     g2 = nx.Graph(e2)
-    print are_lc_equiv(g1, g2)
+    print(are_lc_equiv(g1, g2))
