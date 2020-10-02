@@ -52,7 +52,7 @@ def to_rref(A):
                     A[[x, i]] = A[[i, x]]
                     break
         # Divide each element of row i by a_ij, thus making the pivot a_ij = 1.
-        A[i] /= A[i, j]
+        A[i] //= A[i, j]
         # For each row k from 1 to n, with k != i,
         # subtract row i multiplied by a_kj from row k.
         for k in [k for k in range(n) if k != i]:

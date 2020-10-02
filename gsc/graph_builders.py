@@ -1,5 +1,6 @@
+from __future__ import division
 # Python packages
-import numpy as np
+from past.utils import old_div
 import networkx as nx
 import itertools as it
 from random import randint
@@ -14,7 +15,7 @@ def random_connected_graph(n):
     """ Generates a Erdos-Renyi G_{n,m} random graph """
     g = nx.Graph([(0, 1), (2, 3)])
     while not nx.is_connected(g):
-        edges = randint(n - 1, n * (n - 1) / 2)
+        edges = randint(n - 1, old_div(n * (n - 1), 2))
         g = nx.dense_gnm_random_graph(n, edges)
     return g
 
@@ -32,7 +33,7 @@ def square_lattice(n, m, boundary=True):
     mod_n = n + 1 if boundary else n
     mod_m = m + 1 if boundary else m
     g = nx.Graph()
-    nodes = list(it.product(range(n), range(m)))
+    nodes = list(it.product(list(range(n)), list(range(m))))
     edges = flatten([[((i, j), ((i + 1) % mod_n, j)),
                       ((i, j), (i, (j + 1) % mod_m))] for i, j in nodes])
     edges = [((u_x, u_y), (v_x, v_y)) for (u_x, u_y), (v_x, v_y) in edges
@@ -50,7 +51,7 @@ def make_crazy(graph, n):
                            for u, v in graph.edges()])
     # Creates graph and adds edges and nodes
     crazy_graph = nx.Graph()
-    crazy_graph.add_nodes_from(flatten(crazy_nodes.values()))
+    crazy_graph.add_nodes_from(flatten(list(crazy_nodes.values())))
     crazy_graph.add_edges_from(crazy_edges)
     # Assigns encoded attribute for to_GraphState
     crazy_graph.encoded = True
@@ -66,7 +67,7 @@ def make_ghz_like(graph, n):
         [((node, 0), (node, i)) for node in graph.nodes() for i in range(1, n)]
     # Creates graph and adds edges and nodes
     ghz_graph = nx.Graph()
-    ghz_graph.add_nodes_from(flatten(ghz_nodes.values()))
+    ghz_graph.add_nodes_from(flatten(list(ghz_nodes.values())))
     ghz_graph.add_edges_from(ghz_edges)
     # Assigns encoded attribute for to_GraphState
     ghz_graph.encoded = True
@@ -77,7 +78,7 @@ def create_prime_graph(w_edges, prime):
     """ Creates a weighted graph representing a prime qudit graph state """
     if not is_prime(prime):
         raise Exception("Graph state must be prime-dimensional")
-    us, vs, ws = zip(*w_edges)
+    us, vs, ws = list(zip(*w_edges))
     if max(ws) >= prime or max(ws) < 0:
         raise Exception("Weights must be 0 <= w < p ")
     nx_wg = nx.Graph()
