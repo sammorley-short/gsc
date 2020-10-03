@@ -2,6 +2,7 @@
 from math import log
 import networkx as nx
 import pynauty as pyn
+import zlib
 from collections import defaultdict
 # Local modules
 from gsc.utils import int_to_bits, copy_graph
@@ -91,12 +92,13 @@ def hash_graph(graph):
     if graph.__dict__.get('power', 1) > 1:
         pyn_g_mem, _ = convert_nx_to_pyn(graph, partition='member')
         pyn_g_fam, _ = convert_nx_to_pyn(graph, partition='family')
-        g_mem_hash = hash(pyn.certificate(pyn_g_mem))
-        g_fam_hash = hash(pyn.certificate(pyn_g_fam))
-        g_hash = hash((g_mem_hash, g_fam_hash))
+
+        g_mem_hash = zlib.crc32(pyn.certificate(pyn_g_mem))
+        g_fam_hash = zlib.crc32(pyn.certificate(pyn_g_fam))
+        g_hash = zlib.crc32((g_mem_hash, g_fam_hash))
     else:
         pyn_g, _ = convert_nx_to_pyn(graph)
-        g_hash = hash(pyn.certificate(pyn_g))
+        g_hash = zlib.crc32(pyn.certificate(pyn_g))
     return g_hash
 
 
