@@ -41,7 +41,6 @@ def to_rref(A):
     j = 0
     for i in range(n):
         # While column j has all zero elements, set j = j+1. If j>m return A.
-        # print i, j
         while all(A[i:, j] == 0):
             j += 1
             if j >= m:
@@ -50,7 +49,6 @@ def to_rref(A):
         if A[i, j] == 0:
             for x in range(i+1, n):
                 if A[x, j] != 0:
-                    # print x
                     A[[x, i]] = A[[i, x]]
                     break
         # Divide each element of row i by a_ij, thus making the pivot a_ij = 1.

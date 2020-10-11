@@ -129,11 +129,13 @@ graph_c.add_edges_from(edges)
 
 # Checks equivalence between graph A and graph B
 is_equiv, local_us = are_lc_equiv(graph_a, graph_b)
-print is_equiv, local_us
+print(is_equiv)
+print(local_us)
 
 # Checks equivalence between graph A and graph C
 is_equiv, local_us = are_lc_equiv(graph_a, graph_c)
-print is_equiv, local_us
+print(is_equiv)
+print(local_us)
 ```
 
 which outputs the following:

@@ -185,7 +185,6 @@ def find_all_classes(directory, power, prime):
     rg_file = directory + '/remaining_graphs.csv'
     rem_graphs_size = os.path.getsize(rg_file)
     pbar = tqdm(total=rem_graphs_size)
-    print rem_graphs_size
     while True:
         rem_update = rem_graphs_size - os.path.getsize(rg_file)
         if rem_update >= 0:
