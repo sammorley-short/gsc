@@ -2,11 +2,9 @@
 from math import log
 import networkx as nx
 import pynauty as pyn
-from pprint import pprint
 from collections import defaultdict
-import matplotlib.pyplot as plt
 # Local modules
-from gsc.utils import flatten, int_to_bits, copy_graph
+from gsc.utils import int_to_bits, copy_graph
 
 
 def qudit_graph_map(nx_wg, partition=None):
@@ -20,7 +18,7 @@ def qudit_graph_map(nx_wg, partition=None):
     layers = range(n_layers)
     # If node is prime power, applies colouring across same member-nodes
     if nx_wg.__dict__.get('power', 1) > 1:
-        p, m, f = nx_wg.prime, nx_wg.power, nx_wg.families
+        _, m, f = nx_wg.prime, nx_wg.power, nx_wg.families
         # Partitions based on which member of the family node is
         if partition == 'member':
             coloring = [[(l, (n, i)) for n in range(f)]
@@ -68,7 +66,6 @@ def convert_nx_to_pyn(nx_g, partition=None):
     """
     # If graph represents nD qudit graph, map to coloured layer graph
     coloring = []
-    edges = tuple(set(nx_g.edges.data('weight')))
     if nx_g.__dict__.get('dimension', 2) > 2:
         nx_g, coloring = qudit_graph_map(nx_g, partition)
     # Relabels nodes with integers for compatibility with Pynauty

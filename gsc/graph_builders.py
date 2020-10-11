@@ -2,10 +2,13 @@
 import numpy as np
 import networkx as nx
 import itertools as it
-from pprint import pprint
 from random import randint
 # Local modules
-from gsc.utils import *
+from gsc.utils import (
+    flatten,
+    to_GraphState,
+    is_prime,
+)
 
 
 def random_connected_graph(n):
@@ -116,9 +119,9 @@ def from_MDS_code(A, prime, power):
 
 
 if __name__ == '__main__':
-    l = 5
+    n = 5
     boundary = False
-    g = square_lattice(l, l, boundary)
+    g = square_lattice(n, n, boundary)
     cg = make_crazy(g, 6)
     cgs = to_GraphState(cg)
     url = 'https://abv.peteshadbolt.co.uk/SMS_crazy_graphs'

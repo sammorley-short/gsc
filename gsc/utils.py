@@ -1,5 +1,4 @@
 # Python packages
-import ast
 import numpy as np
 from math import sqrt
 from itertools import chain, combinations
@@ -7,7 +6,6 @@ from collections import defaultdict
 from math import pi, cos, sin
 from abp import GraphState
 from abp.util import xyz
-# Local modules
 
 
 def copy_graph(graph):

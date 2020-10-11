@@ -105,7 +105,7 @@ def are_lc_equiv(g1, g2):
     am2, k2 = get_adjacency_matrix(g2)
     dim1, dim2 = len(k1), len(k2)
     if k1 != k2 or am1.shape != (dim1, dim1) or am2.shape != (dim2, dim2):
-        raise False, None
+        return False, None
     # Defines binary matrices
     I = sp.eye(dim1)
     S1 = sp.Matrix(am1).col_join(I)
