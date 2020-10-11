@@ -1,13 +1,8 @@
 # Python packages
-import os
 import csv
 import sympy as sp
 import numpy as np
-import networkx as nx
 import itertools as it
-from pprint import pprint
-from ast import literal_eval
-from subprocess import check_output
 # Local modules
 from gsc.utils import canonical_edge_order, flatten, powerset
 
@@ -80,9 +75,9 @@ def GF2nullspace(A):
     # Permutes columns of A into [ I_n | P ] form (I_n is n x n, P is n x k)
     n, m = A.shape
     perms = []
-    I = np.eye(n, dtype=int)
+    Id = np.eye(n, dtype=int)
     for i in range(n):
-        while A[:, i].tolist() != I[:, i].tolist():
+        while A[:, i].tolist() != Id[:, i].tolist():
             perm = range(i, m)
             A[:, perm] = A[:, range(i + 1, m) + [i]]
             perms.append(perm)
@@ -107,9 +102,9 @@ def are_lc_equiv(g1, g2):
     if k1 != k2 or am1.shape != (dim1, dim1) or am2.shape != (dim2, dim2):
         return False, None
     # Defines binary matrices
-    I = sp.eye(dim1)
-    S1 = sp.Matrix(am1).col_join(I)
-    S2 = sp.Matrix(am2).col_join(I)
+    Id = sp.eye(dim1)
+    S1 = sp.Matrix(am1).col_join(Id)
+    S2 = sp.Matrix(am2).col_join(Id)
     # Defines symbolic variables
     A = sp.symbols('a:' + str(dim1), bool=True)
     B = sp.symbols('b:' + str(dim1), bool=True)
@@ -122,7 +117,7 @@ def are_lc_equiv(g1, g2):
     # Creates symbolic binary matrix
     A, B, C, D = sp.diag(*A), sp.diag(*B), sp.diag(*C), sp.diag(*D)
     Q = A.row_join(B).col_join(C.row_join(D))
-    P = sp.zeros(dim1).row_join(I).col_join(I.row_join(sp.zeros(dim1)))
+    P = sp.zeros(dim1).row_join(Id).col_join(Id.row_join(sp.zeros(dim1)))
     # Constructs matrix to solve
     X = [i for i in S1.T * Q.T * P * S2]
     X = np.array([[x.coeff(v) for v in abcd] for x in X], dtype=int)

@@ -1,8 +1,6 @@
 # Python modules
 import networkx as nx
 import itertools as it
-# Local modules
-from gsc.utils import powerset
 
 
 def gen_psuedo_graph_edge_map(prime, power):

@@ -2,18 +2,20 @@
 import os
 import csv
 import sys
-import time
 import numpy as np
 import networkx as nx
 import itertools as it
-from time import time
 from tqdm import tqdm
-from random import shuffle
 from pprint import pprint
 # Local modules
 from gsc.get_nauty import hash_graph
-from gsc.psuedo_graphs import *
-from gsc.explore_lc_orbit import explore_lc_orbit, export_class_register
+from gsc.psuedo_graphs import (
+    real_graph_to_psu_edges,
+    gen_psuedo_graph_edge_map,
+    create_psuedo_graph,
+    psuedo_to_real,
+)
+from gsc.explore_lc_orbit import explore_lc_orbit
 
 
 def init_search_database(prime, power, nodes):
@@ -141,7 +143,7 @@ def make_isomorph_func(edge_index, n):
     return isomorph_configs
 
 
-def remove_disconnected_configs(edge_config, isomorph_configs):
+def remove_disconnected_configs(directory, edge_config, isomorph_configs):
     """ Removes all graphs which are siliarly disconnected incl. isomorphs """
     # Finds the edge occupancies of all isomorphic configurations
     iso_occs = set(tuple(map(bool, config))
@@ -163,7 +165,7 @@ def remove_disconnected_configs(edge_config, isomorph_configs):
     os.rename(tmp_filename, filename)
 
 
-def find_all_classes(directory):
+def find_all_classes(directory, power, prime):
     """ Finds all members of all classes """
     # Gets edge indices and state params and generates edge map
     filename = directory + '/edge_index.csv'
@@ -201,7 +203,7 @@ def find_all_classes(directory):
         if not nx.is_connected(init_graph.to_undirected()):
             tqdm.write("Disconnected. Removing isomorphs... ")
             # Removes any isomorphic graphs from remaining
-            remove_disconnected_configs(edge_config, isomorph_configs)
+            remove_disconnected_configs(directory, edge_config, isomorph_configs)
             tqdm.write("Done")
             continue
         init_graph = psuedo_to_real(init_graph)

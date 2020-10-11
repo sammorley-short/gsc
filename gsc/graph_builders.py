@@ -6,7 +6,6 @@ from random import randint
 # Local modules
 from gsc.utils import (
     flatten,
-    to_GraphState,
     is_prime,
 )
 

@@ -3,13 +3,11 @@ import os
 import sys
 import csv
 import json
-import pynauty as pyn
 import networkx as nx
 import itertools as it
-from pprint import pprint
 from networkx.readwrite import json_graph
 # Local modules
-from gsc.utils import *
+from gsc.utils import copy_graph
 from gsc.get_nauty import find_rep_nodes, hash_graph
 
 
