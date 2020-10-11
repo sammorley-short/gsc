@@ -129,3 +129,4 @@ def test_prime_dimension_explore_example():
                  'target': 5, 'ops': ['LC1', 'LC2']},
              {'source': 3, 'equivs': [[0]], 'target': 6, 'ops': ['EM2']},
              {'source': 4, 'equivs': [[1], [1, 0, 2]], 'target': 5, 'ops': ['LC1', 'LC2']}]}
+    assert data == cg_data
