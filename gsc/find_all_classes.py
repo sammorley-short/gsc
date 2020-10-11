@@ -246,20 +246,3 @@ def find_all_classes(directory):
         write_hashes(directory, hashes)
         tqdm.write("Done")
     pbar.close()
-
-
-if __name__ == '__main__':
-    prime = 2
-    power = 2
-    nodes = 3
-    print prime, power, nodes
-    init_search_database(prime, power, nodes)
-    directory = 'class_databases/' + \
-        'prime_power_p%d_m%d_n%d' % (prime, power, nodes)
-
-    print "Searching"
-    start = time()
-    find_all_classes(directory)
-    end = time() - start
-    runtime = (int(end / 60), int(end % 60))
-    print "Runtime: %dm %ds" % runtime

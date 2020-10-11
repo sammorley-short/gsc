@@ -142,18 +142,3 @@ def are_lc_equiv(g1, g2):
         return True, V
     else:
         return False, None
-
-
-if __name__ == '__main__':
-    e1 = [(0, 1), (1, 2)]
-    g1 = nx.Graph(e1)
-    e2 = [(0, 1), (1, 2), (2, 0)]
-    g2 = nx.Graph(e2)
-    print are_lc_equiv(g1, g2)
-
-    e1 = [(0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (1, 2), (1, 3),
-          (1, 4), (1, 5), (2, 3), (2, 4), (2, 5), (3, 4), (3, 5), (4, 5)]
-    e2 = [(0, 1), (0, 2), (0, 3), (0, 4), (0, 5)]
-    g1 = nx.Graph(e1)
-    g2 = nx.Graph(e2)
-    print are_lc_equiv(g1, g2)

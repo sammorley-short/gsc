@@ -87,8 +87,3 @@ def real_to_psuedo(real_g, c_map, psu_edge_index=None):
     psu_g.dimension, psu_g.c_map = real_g.dimension, c_map
     psu_g.add_weighted_edges_from(psu_edges)
     return psu_g
-
-
-if __name__ == '__main__':
-    prime, power = 3, 1
-    print gen_psuedo_graph_edge_map(prime, power)

@@ -116,14 +116,3 @@ def from_MDS_code(A, prime, power):
     graph.power = power
     graph.dimension = prime ** power
     return graph
-
-
-if __name__ == '__main__':
-    n = 5
-    boundary = False
-    g = square_lattice(n, n, boundary)
-    cg = make_crazy(g, 6)
-    cgs = to_GraphState(cg)
-    url = 'https://abv.peteshadbolt.co.uk/SMS_crazy_graphs'
-    cgs.url = url
-    cgs.push()
