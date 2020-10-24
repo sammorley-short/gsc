@@ -111,7 +111,7 @@ def are_lc_equiv(g1, g2):
     # Defines solution matrix basis
     abcd = flatten(list(zip(A, B, C, D)))
     no_vars = len(abcd)
-    no_qubits = no_vars / 4
+    no_qubits = no_vars // 4
     # Creates symbolic binary matrix
     A, B, C, D = sp.diag(*A), sp.diag(*B), sp.diag(*C), sp.diag(*D)
     Q = A.row_join(B).col_join(C.row_join(D))
