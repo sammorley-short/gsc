@@ -45,7 +45,7 @@ def to_GraphState(graph, r=0.2):
         for node in graph.nodes():
             crazy_nodes[node[0]].append(node)
         nodes = []
-        for crazy_node, sub_nodes in list(crazy_nodes.items()):
+        for crazy_node, sub_nodes in crazy_nodes.items():
             nodes += circular_positions(sorted(sub_nodes), r)
     else:
         nodes = [(node, xyz(*node)) for node in graph.nodes()]
@@ -66,7 +66,7 @@ def vector_scale(u, s):
 
 def vector_add(u, v):
     """ Adds vectors u and v """
-    return list(map(sum, list(zip(u, v))))
+    return map(sum, list(zip(u, v)))
 
 
 def flatten(array, level=1):
