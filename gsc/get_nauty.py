@@ -13,9 +13,9 @@ def qudit_graph_map(nx_wg, partition=None):
     For prime-power graph states, can colour by member or family.
     """
     # Gets list of all nodes by layer
-    us, vs, weights = zip(*nx_wg.edges.data('weight'))
+    us, vs, weights = list(zip(*nx_wg.edges.data('weight')))
     n_layers = int(log(max(weights), 2)) + 1
-    layers = range(n_layers)
+    layers = list(range(n_layers))
     # If node is prime power, applies colouring across same member-nodes
     if nx_wg.__dict__.get('power', 1) > 1:
         _, m, f = nx_wg.prime, nx_wg.power, nx_wg.families
@@ -69,11 +69,11 @@ def convert_nx_to_pyn(nx_g, partition=None):
     if nx_g.__dict__.get('dimension', 2) > 2:
         nx_g, coloring = qudit_graph_map(nx_g, partition)
     # Relabels nodes with integers for compatibility with Pynauty
-    nodes, neighs = zip(*nx_g.adjacency())
+    nodes, neighs = list(zip(*nx_g.adjacency()))
     to_int_node_map = {n: i for i, n in enumerate(nodes)}
     relabel = to_int_node_map.get
-    nodes = map(relabel, nodes)
-    neighs = [map(relabel, node_neighs.keys()) for node_neighs in neighs]
+    nodes = list(map(relabel, nodes))
+    neighs = [list(map(relabel, node_neighs.keys())) for node_neighs in neighs]
     coloring = [set(map(relabel, colour)) for colour in coloring]
     # Creates Pynauty graph
     graph_adj = {node: node_neighs for node, node_neighs in zip(nodes, neighs)}
@@ -101,7 +101,7 @@ def hash_graph(graph):
 
 def canonical_relabel(nx_g):
     """ Returns isomorphic graph with canonical relabelling """
-    nodes, neighs = zip(*nx_g.adjacency())
+    nodes, neighs = list(zip(*nx_g.adjacency()))
     pyn_g, node_map = convert_nx_to_pyn(nx_g)
     canon_lab = pyn.canon_label(pyn_g)
     canon_relab = {node_map[o_node]: i_node for i_node, o_node

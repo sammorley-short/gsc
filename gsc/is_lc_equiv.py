@@ -76,8 +76,8 @@ def GF2nullspace(A):
     Id = np.eye(n, dtype=int)
     for i in range(n):
         while A[:, i].tolist() != Id[:, i].tolist():
-            perm = range(i, m)
-            A[:, perm] = A[:, range(i + 1, m) + [i]]
+            perm = list(range(i, m))
+            A[:, perm] = A[:, list(range(i + 1, m)) + [i]]
             perms.append(perm)
     P = A[:, n:]
     # N(A) is spanned by [P^T | I_k ] (P^T is k x n and I_k is k x k)
@@ -109,13 +109,13 @@ def are_lc_equiv(g1, g2):
     C = sp.symbols('c:' + str(dim1), bool=True)
     D = sp.symbols('d:' + str(dim1), bool=True)
     # Defines solution matrix basis
-    abcd = flatten(zip(A, B, C, D))
+    abcd = flatten(list(zip(A, B, C, D)))
     no_vars = len(abcd)
     no_qubits = no_vars / 4
     # Creates symbolic binary matrix
     A, B, C, D = sp.diag(*A), sp.diag(*B), sp.diag(*C), sp.diag(*D)
     Q = A.row_join(B).col_join(C.row_join(D))
-    P = sp.zeros(dim1).row_join(Id).col_join(Id.row_join(sp.zeros(dim1)))
+    P = sp.zeros(dim1).row_join(I).col_join(I.row_join(sp.zeros(dim1)))
     # Constructs matrix to solve
     X = [i for i in S1.T * Q.T * P * S2]
     X = np.array([[x.coeff(v) for v in abcd] for x in X], dtype=int)
@@ -135,3 +135,4 @@ def are_lc_equiv(g1, g2):
         return True, V
     else:
         return False, None
+
