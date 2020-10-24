@@ -124,11 +124,14 @@ def find_rep_nodes(nx_g):
     node_equivs = defaultdict(list)
     for node, equiv in enumerate(orbits):
         node_equivs[node_map[equiv]].append(node_map[node])
-    # Removes any LC's that act trivially on the graph (i.e. act on d=1 nodes)
-    node_equivs = {node: equivs for node, equivs in node_equivs.items()
-                   if nx_g.degree(node) > 1}
     # If multigraph, returns orbits of nodes in first layer
     if nx_g.__dict__.get('dimension', 2) > 2:
         node_equivs = {u: [v for l_v, v in equivs if l_v == 0]
-                       for (l_u, u), equivs in node_equivs.items() if l_u == 0}
+                       for (l_u, u), equivs in list(node_equivs.items())
+                       if
+                       l_u == 0}
+    else:
+        node_equivs = {node: equivs for node, equivs in
+                       node_equivs.items()
+                       if nx_g.degree(node) > 1}
     return node_equivs
