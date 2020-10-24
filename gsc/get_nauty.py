@@ -2,7 +2,7 @@
 from math import log
 import networkx as nx
 import pynauty as pyn
-import zlib
+import hashlib
 from collections import defaultdict
 # Local modules
 from gsc.utils import int_to_bits, copy_graph
@@ -93,12 +93,12 @@ def hash_graph(graph):
         pyn_g_mem, _ = convert_nx_to_pyn(graph, partition='member')
         pyn_g_fam, _ = convert_nx_to_pyn(graph, partition='family')
 
-        g_mem_hash = zlib.crc32(pyn.certificate(pyn_g_mem))
-        g_fam_hash = zlib.crc32(pyn.certificate(pyn_g_fam))
-        g_hash = zlib.crc32((g_mem_hash, g_fam_hash))
+        g_mem_hash = hashlib.md5(pyn.certificate(pyn_g_mem))
+        g_fam_hash = hashlib.md5(pyn.certificate(pyn_g_fam))
+        g_hash = hashlib.md5((g_mem_hash, g_fam_hash))
     else:
         pyn_g, _ = convert_nx_to_pyn(graph)
-        g_hash = zlib.crc32(pyn.certificate(pyn_g))
+        g_hash = hashlib.md5(pyn.certificate(pyn_g)).hexdigest()
     return g_hash
 
 
