@@ -1,4 +1,5 @@
 # Python packages
+import numpy as np
 import networkx as nx
 import itertools as it
 from random import randint
@@ -31,7 +32,7 @@ def square_lattice(n, m, boundary=True):
     mod_n = n + 1 if boundary else n
     mod_m = m + 1 if boundary else m
     g = nx.Graph()
-    nodes = it.product(range(n), range(m))
+    nodes = list(it.product(range(n), range(m)))
     edges = flatten([[((i, j), ((i + 1) % mod_n, j)),
                       ((i, j), (i, (j + 1) % mod_m))] for i, j in nodes])
     edges = [((u_x, u_y), (v_x, v_y)) for (u_x, u_y), (v_x, v_y) in edges

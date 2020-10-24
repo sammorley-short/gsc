@@ -69,11 +69,11 @@ def convert_nx_to_pyn(nx_g, partition=None):
     if nx_g.__dict__.get('dimension', 2) > 2:
         nx_g, coloring = qudit_graph_map(nx_g, partition)
     # Relabels nodes with integers for compatibility with Pynauty
-    nodes, neighs = list(zip(*nx_g.adjacency()))
+    nodes, neighs = zip(*nx_g.adjacency())
     to_int_node_map = {n: i for i, n in enumerate(nodes)}
     relabel = to_int_node_map.get
     nodes = map(relabel, nodes)
-    neighs = [map(relabel, list(node_neighs.keys())) for node_neighs in neighs]
+    neighs = [map(relabel, node_neighs.keys()) for node_neighs in neighs]
     coloring = [set(map(relabel, colour)) for colour in coloring]
     # Creates Pynauty graph
     graph_adj = {node: node_neighs for node, node_neighs in zip(nodes, neighs)}
@@ -90,13 +90,12 @@ def hash_graph(graph):
     if graph.__dict__.get('power', 1) > 1:
         pyn_g_mem, _ = convert_nx_to_pyn(graph, partition='member')
         pyn_g_fam, _ = convert_nx_to_pyn(graph, partition='family')
-
         g_mem_hash = hash(pyn.certificate(pyn_g_mem))
         g_fam_hash = hash(pyn.certificate(pyn_g_fam))
         g_hash = hash((g_mem_hash, g_fam_hash))
     else:
         pyn_g, _ = convert_nx_to_pyn(graph)
-        g_hash = hash(pyn.certificate(pyn_g)).hexdigest()
+        g_hash = hash(pyn.certificate(pyn_g))
     return g_hash
 
 
@@ -125,11 +124,10 @@ def find_rep_nodes(nx_g):
     for node, equiv in enumerate(orbits):
         node_equivs[node_map[equiv]].append(node_map[node])
     # Removes any LC's that act trivially on the graph (i.e. act on d=1 nodes)
-    node_equivs = {node: equivs for node, equivs in
-                   node_equivs.iteritems()
+    node_equivs = {node: equivs for node, equivs in node_equivs.items()
                    if nx_g.degree(node) > 1}
     # If multigraph, returns orbits of nodes in first layer
     if nx_g.__dict__.get('dimension', 2) > 2:
         node_equivs = {u: [v for l_v, v in equivs if l_v == 0]
-                       for (l_u, u), equivs in list(node_equivs.items()) if l_u == 0}
+                       for (l_u, u), equivs in node_equivs.items() if l_u == 0}
     return node_equivs

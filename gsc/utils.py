@@ -66,7 +66,7 @@ def vector_scale(u, s):
 
 def vector_add(u, v):
     """ Adds vectors u and v """
-    return map(sum, list(zip(u, v)))
+    return map(sum, zip(u, v))
 
 
 def flatten(array, level=1):
