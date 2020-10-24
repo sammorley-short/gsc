@@ -115,7 +115,7 @@ def are_lc_equiv(g1, g2):
     # Creates symbolic binary matrix
     A, B, C, D = sp.diag(*A), sp.diag(*B), sp.diag(*C), sp.diag(*D)
     Q = A.row_join(B).col_join(C.row_join(D))
-    P = sp.zeros(dim1).row_join(I).col_join(I.row_join(sp.zeros(dim1)))
+    P = sp.zeros(dim1).row_join(Id).col_join(Id.row_join(sp.zeros(dim1)))
     # Constructs matrix to solve
     X = [i for i in S1.T * Q.T * P * S2]
     X = np.array([[x.coeff(v) for v in abcd] for x in X], dtype=int)
