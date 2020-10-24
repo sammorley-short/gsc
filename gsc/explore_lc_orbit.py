@@ -145,10 +145,10 @@ def queued_orbit_search(init_graph, local_ops, save_edges, verbose):
         visited += 1
         # Gets next graph on queue and finds representative nodes
         graph_label = queue.pop()
-        graph = class_graph.node[graph_label]['nx_graph']
+        graph = class_graph.nodes[graph_label]['nx_graph']
         node_equivs = find_rep_nodes(graph)
         # Applies set of local ops to each representative node
-        for rep_node, equiv_nodes in node_equivs.iteritems():
+        for rep_node, equiv_nodes in node_equivs.items():
             for op_label, local_op in local_ops:
                 new_graph = local_op(graph, rep_node)
                 new_edges = list(new_graph.edges())
@@ -233,16 +233,16 @@ def explore_lc_orbit(init_graph, save_edges=True, verbose=True):
 
 def get_min_edge_reps(class_graph):
     """ Returns all minimum edge representations for a given LC orbit """
-    min_edges = min(len(graph['edges']) for graph in class_graph.node.values())
-    min_edge_reps = {key: graph for key, graph in class_graph.node.iteritems()
+    min_edges = min(len(graph['edges']) for graph in class_graph.nodes.values())
+    min_edge_reps = {key: graph for key, graph in class_graph.nodes.items()
                      if len(graph['edges']) == min_edges}
     return min_edge_reps
 
 
 def get_max_edge_reps(class_graph):
     """ Returns all minimum edge representations for a given LC orbit """
-    max_edges = max(len(graph['edges']) for graph in class_graph.node.values())
-    max_edge_reps = {key: graph for key, graph in class_graph.node.iteritems()
+    max_edges = max(len(graph['edges']) for graph in class_graph.nodes.values())
+    max_edge_reps = {key: graph for key, graph in class_graph.nodes.items()
                      if len(graph['edges']) == max_edges}
     return max_edge_reps
 
@@ -250,8 +250,8 @@ def get_max_edge_reps(class_graph):
 def export_class_graph(class_graph, filename, min_edge_reps=False):
     """ Exports class graph to JSON file """
     # Removes all networkx graphs and gets class graph data
-    for node, attrs in class_graph.node.iteritems():
-        class_graph.node[node].pop('nx_graph')
+    for node, attrs in class_graph.nodes.items():
+        class_graph.nodes[node].pop('nx_graph')
     class_graph_data = {key: value for key, value
                         in json_graph.node_link_data(class_graph).items()
                         if key in ('nodes', 'links')}
@@ -272,7 +272,7 @@ def export_class_register(class_graph, filename, min_edge_reps=False):
     """ Exports list of all class members to file """
     # Creates class member register
     register = [[node, attrs['edges'], attrs['hash']]
-                for node, attrs in class_graph.node.iteritems()]
+                for node, attrs in class_graph.nodes.items()]
     reg_filename = filename + '.csv'
     # Exports register to file
     with open(reg_filename, 'w') as csvfile:
