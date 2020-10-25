@@ -6,8 +6,8 @@ import itertools as it
 # Local modules
 from gsc.utils import canonical_edge_order, flatten, powerset
 
-bin2gate = {(1, 0, 0, 1): 'I', (0, 1, 1, 0): 'H', (1, 0, 1, 1): 'S',
-            (1, 1, 1, 0): 'HS', (0, 1, 1, 1): 'SH', (1, 1, 0, 1): 'HSH'}
+bin2gate = {(1, 0, 0, 1): 'I', (0, 1, 1, 0): 'H', (1, 1, 0, 1): 'S',
+            (0, 1, 1, 1): 'HS', (1, 1, 1, 0): 'SH', (1, 0, 1, 1): 'HSH'}
 
 
 def get_adjacency_matrix(graph):
