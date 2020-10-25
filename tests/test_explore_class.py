@@ -47,9 +47,9 @@ def test_explore_lc_orbit():
         g = gen_random_connected_graph(7)
         class_graph = explore_lc_orbit(g, verbose=False)
         orbit_hashes = set([graph['hash'] for graph
-                            in class_graph.node.values()])
-        assert len(class_graph.node) == len(orbit_hashes)
-        graphs = [graph['nx_graph'] for graph in class_graph.node.values()]
+                            in class_graph.nodes.values()])
+        assert len(class_graph.nodes) == len(orbit_hashes)
+        graphs = [graph['nx_graph'] for graph in class_graph.nodes.values()]
         for i in range(10):
             graph_a = random.choice(graphs)
             graph_b = random.choice(graphs)
@@ -64,7 +64,7 @@ def test_ququart_pair():
     graph = create_prime_power_graph(edges, 2, 2)
     class_graph = explore_lc_orbit(graph, verbose=False)
     register = set(tuple(map(tuple, attrs['edges']))
-                   for node, attrs in class_graph.node.iteritems())
+                   for node, attrs in class_graph.nodes.items())
     target = \
         [(((0, 1), (1, 0), 1), ((0, 0), (1, 1), 1)),
          (((0, 1), (1, 0), 1), ((0, 1), (1, 1), 1), ((0, 0), (1, 1), 1)),
@@ -78,7 +78,7 @@ def test_ququart_pair():
     graph = create_prime_power_graph(edges, 2, 2)
     class_graph = explore_lc_orbit(graph, verbose=False)
     register = set(tuple(map(tuple, attrs['edges']))
-                   for node, attrs in class_graph.node.iteritems())
+                   for node, attrs in class_graph.nodes.items())
     target = \
         [(((0, 1), (1, 0), 1),),
          (((0, 1), (1, 0), 1), ((0, 1), (1, 1), 1)),

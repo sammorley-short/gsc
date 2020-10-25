@@ -93,7 +93,7 @@ def hash_graph(graph):
         pyn_g_fam, _ = convert_nx_to_pyn(graph, partition='family')
         g_mem_hash = hashlib.md5(pyn.certificate(pyn_g_mem)).hexdigest()
         g_fam_hash = hashlib.md5(pyn.certificate(pyn_g_fam)).hexdigest()
-        g_hash = hashlib.md5((g_mem_hash, g_fam_hash)).hexdigest()
+        g_hash = hashlib.md5((g_mem_hash + g_fam_hash).encode()).hexdigest()
     else:
         pyn_g, _ = convert_nx_to_pyn(graph)
         g_hash = hashlib.md5(pyn.certificate(pyn_g)).hexdigest()

@@ -12,7 +12,7 @@ def test_find_rep_nodes():
     for _ in range(100):
         g = gen_random_connected_graph(10)
         g_equivs = find_rep_nodes(g)
-        for rep_node, equiv_nodes in g_equivs.iteritems():
+        for rep_node, equiv_nodes in g_equivs.items():
             lc_equiv_graphs = [qubit_LC(g, node)
                                for node in equiv_nodes]
             lc_equiv_hashes = list(set(map(hash_graph, lc_equiv_graphs)))
@@ -57,7 +57,7 @@ def test_prime_power_hash_examples():
     e2 = [((0, 1), (1, 1), 1)]
     g1 = create_prime_power_graph(e1, prime, power)
     g2 = create_prime_power_graph(e2, prime, power)
-    assert hash_graph(g1) == hash_graph(g2)
+    assert not hash_graph(g1) == hash_graph(g2)
 
     # Tests both ququart zigzags are equivalent
     e1 = [((0, 1), (1, 1), 1), ((1, 0), (0, 0), 1), ((0, 0), (1, 1), 1)]
@@ -71,7 +71,7 @@ def test_prime_power_hash_examples():
     e2 = [((0, 0), (0, 1), 1), ((1, 0), (1, 1), 1)]
     g1 = create_prime_power_graph(e1, prime, power)
     g2 = create_prime_power_graph(e2, prime, power)
-    assert hash_graph(g1) == hash_graph(g2)
+    assert not hash_graph(g1) == hash_graph(g2)
 
 
 def gen_random_connected_graph(n, p=0.1):
