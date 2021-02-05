@@ -13,7 +13,7 @@ def qudit_graph_map(nx_wg, partition=None):
     For prime-power graph states, can colour by member or family.
     """
     # Gets list of all nodes by layer
-    us, vs, weights = list(zip(*nx_wg.edges.data('weight')))
+    us, vs, weights = zip(*nx_wg.edges.data('weight'))
     n_layers = int(log(max(weights), 2)) + 1
     layers = list(range(n_layers))
     # If node is prime power, applies colouring across same member-nodes
