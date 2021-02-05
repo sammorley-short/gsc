@@ -50,7 +50,7 @@ def make_crazy(graph, n):
                            for u, v in graph.edges()])
     # Creates graph and adds edges and nodes
     crazy_graph = nx.Graph()
-    crazy_graph.add_nodes_from(flatten(list(crazy_nodes.values())))
+    crazy_graph.add_nodes_from(flatten(crazy_nodes.values()))
     crazy_graph.add_edges_from(crazy_edges)
     # Assigns encoded attribute for to_GraphState
     crazy_graph.encoded = True
