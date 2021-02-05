@@ -101,7 +101,7 @@ def hash_graph(graph):
 
 def canonical_relabel(nx_g):
     """ Returns isomorphic graph with canonical relabelling """
-    nodes, neighs = list(zip(*nx_g.adjacency()))
+    nodes, neighs = zip(*nx_g.adjacency())
     pyn_g, node_map = convert_nx_to_pyn(nx_g)
     canon_lab = pyn.canon_label(pyn_g)
     canon_relab = {node_map[o_node]: i_node for i_node, o_node
