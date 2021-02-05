@@ -109,7 +109,7 @@ def are_lc_equiv(g1, g2):
     C = sp.symbols('c:' + str(dim1), bool=True)
     D = sp.symbols('d:' + str(dim1), bool=True)
     # Defines solution matrix basis
-    abcd = flatten(list(zip(A, B, C, D)))
+    abcd = flatten(zip(A, B, C, D))
     no_vars = len(abcd)
     no_qubits = no_vars // 4
     # Creates symbolic binary matrix
