@@ -72,7 +72,7 @@ def convert_nx_to_pyn(nx_g, partition=None):
     nodes, neighs = list(zip(*nx_g.adjacency()))
     to_int_node_map = {n: i for i, n in enumerate(nodes)}
     relabel = to_int_node_map.get
-    nodes = list(map(relabel, nodes))
+    nodes = map(relabel, nodes)
     neighs = [list(map(relabel, node_neighs.keys())) for node_neighs in neighs]
     coloring = [set(map(relabel, colour)) for colour in coloring]
     # Creates Pynauty graph
