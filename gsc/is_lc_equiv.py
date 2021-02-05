@@ -135,4 +135,3 @@ def are_lc_equiv(g1, g2):
         return True, V
     else:
         return False, None
-
