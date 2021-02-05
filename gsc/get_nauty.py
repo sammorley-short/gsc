@@ -15,7 +15,7 @@ def qudit_graph_map(nx_wg, partition=None):
     # Gets list of all nodes by layer
     us, vs, weights = zip(*nx_wg.edges.data('weight'))
     n_layers = int(log(max(weights), 2)) + 1
-    layers = list(range(n_layers))
+    layers = range(n_layers)
     # If node is prime power, applies colouring across same member-nodes
     if nx_wg.__dict__.get('power', 1) > 1:
         _, m, f = nx_wg.prime, nx_wg.power, nx_wg.families
