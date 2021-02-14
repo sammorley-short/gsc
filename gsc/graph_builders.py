@@ -14,7 +14,7 @@ def random_connected_graph(n):
     """ Generates a Erdos-Renyi G_{n,m} random graph """
     g = nx.Graph([(0, 1), (2, 3)])
     while not nx.is_connected(g):
-        edges = randint(n - 1, n * (n - 1) / 2)
+        edges = randint(n - 1, n * (n - 1) // 2)
         g = nx.dense_gnm_random_graph(n, edges)
     return g
 

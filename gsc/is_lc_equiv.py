@@ -52,7 +52,7 @@ def to_rref(A):
                     A[[x, i]] = A[[i, x]]
                     break
         # Divide each element of row i by a_ij, thus making the pivot a_ij = 1.
-        A[i] /= A[i, j]
+        A[i] //= A[i, j]
         # For each row k from 1 to n, with k != i,
         # subtract row i multiplied by a_kj from row k.
         for k in [k for k in range(n) if k != i]:
@@ -76,8 +76,8 @@ def GF2nullspace(A):
     Id = np.eye(n, dtype=int)
     for i in range(n):
         while A[:, i].tolist() != Id[:, i].tolist():
-            perm = range(i, m)
-            A[:, perm] = A[:, range(i + 1, m) + [i]]
+            perm = list(range(i, m))
+            A[:, perm] = A[:, list(range(i + 1, m)) + [i]]
             perms.append(perm)
     P = A[:, n:]
     # N(A) is spanned by [P^T | I_k ] (P^T is k x n and I_k is k x k)
@@ -111,7 +111,7 @@ def are_lc_equiv(g1, g2):
     # Defines solution matrix basis
     abcd = flatten(zip(A, B, C, D))
     no_vars = len(abcd)
-    no_qubits = no_vars / 4
+    no_qubits = no_vars // 4
     # Creates symbolic binary matrix
     A, B, C, D = sp.diag(*A), sp.diag(*B), sp.diag(*C), sp.diag(*D)
     Q = A.row_join(B).col_join(C.row_join(D))

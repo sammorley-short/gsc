@@ -39,7 +39,7 @@ def init_search_database(prime, power, nodes):
         writer = csv.writer(file)
         writer.writerow([prime, power, nodes])
     # Writes complete list of edge configs to file
-    max_edges = nodes * (nodes - 1) / 2
+    max_edges = nodes * (nodes - 1) // 2
     all_edge_configs = it.product(range(prime ** (power ** 2)),
                                   repeat=max_edges)
     edge_configs = \
@@ -218,7 +218,7 @@ def find_all_classes(directory, power, prime):
         class_graph = explore_lc_orbit(init_graph, False, False)
         class_register = [[node, attrs['edges'],
                            attrs['hash'], attrs['nx_graph']]
-                          for node, attrs in class_graph.node.iteritems()]
+                          for node, attrs in class_graph.node.items()]
         nodes, edges, hashes, graphs = zip(*class_register)
         # Formats edge list based on state parameters
         if power == 1:
