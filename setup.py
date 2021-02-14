@@ -13,7 +13,7 @@ setup(
         'abp',
         'numpy',
         'sympy',
-        'matplotlib==2.2.3',
+        'matplotlib',
         'networkx'
     ],
     zip_safe=False
