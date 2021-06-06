@@ -14,7 +14,7 @@ def test_find_rep_nodes():
     for _ in range(100):
         g = gen_random_connected_graph(10)
         g_equivs = find_rep_nodes(g)
-        for rep_node, equiv_nodes in g_equivs.iteritems():
+        for rep_node, equiv_nodes in g_equivs.items():
             lc_equiv_graphs = [qubit_LC(g, node)
                                for node in equiv_nodes]
             lc_equiv_hashes = list(set(map(hash_graph, lc_equiv_graphs)))

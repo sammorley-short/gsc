@@ -64,7 +64,7 @@ def test_ququart_pair():
     graph = create_prime_power_graph(edges, 2, 2)
     class_graph = explore_lc_orbit(graph, verbose=False)
     register = set(tuple(map(tuple, attrs['edges']))
-                   for node, attrs in class_graph.node.iteritems())
+                   for node, attrs in class_graph.nodes.items())
     target = \
         [(((0, 1), (1, 0), 1), ((0, 0), (1, 1), 1)),
          (((0, 1), (1, 0), 1), ((0, 1), (1, 1), 1), ((0, 0), (1, 1), 1)),
