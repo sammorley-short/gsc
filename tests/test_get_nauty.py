@@ -1,8 +1,10 @@
 # Python packages
+import pytest
 import random
 import networkx as nx
+import pynauty as pyn
 # Local modules
-from gsc.get_nauty import find_rep_nodes, hash_graph, canonical_relabel
+from gsc.get_nauty import find_rep_nodes, hash_graph, canonical_relabel, convert_nx_to_pyn
 from gsc.explore_lc_orbit import qubit_LC
 from gsc.graph_builders import create_prime_power_graph
 from gsc.utils import canonical_edge_order
@@ -90,3 +92,18 @@ def random_relabel(graph):
     relabel = {i_node: o_node for i_node, o_node in zip(nodes, relab_nodes)}
     relabel_graph = nx.relabel_nodes(graph, relabel)
     return relabel_graph
+
+
+@pytest.mark.parametrize('nx_g_vertices, nx_g_edges, pyn_adj_matrix, expected_pyn_node_map', [
+    ([1], [], {0: []}, {0: 1}),
+    ([1, 2], [(1, 2)], {0: [1], 1: [0]}, {0: 1, 1: 2}),
+    ([6, 4, 2], [(2, 6), (4, 6)], {0: [2, 1], 1: [0], 2: [0]}, {0: 6, 1: 4, 2: 2}),
+])
+def test_convert_nx_to_pyn(nx_g_vertices, nx_g_edges, pyn_adj_matrix, expected_pyn_node_map):
+    nx_g = nx.Graph()
+    nx_g.add_nodes_from(nx_g_vertices)
+    nx_g.add_edges_from(nx_g_edges)
+    expected_pyn_g = pyn.Graph(len(nx_g_vertices), directed=False, adjacency_dict=pyn_adj_matrix)
+    pyn_g, pyn_g_node_map = convert_nx_to_pyn(nx_g)
+    assert pyn_g_node_map == expected_pyn_node_map
+    assert pyn_g.adjacency_dict == expected_pyn_g.adjacency_dict
