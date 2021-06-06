@@ -103,19 +103,15 @@ def test_prime_power_hash_examples_2_2(edges_1, edges_2):
 @pytest.mark.parametrize('nx_g_vertices, nx_g_edges, pyn_adj_matrix, expected_pyn_node_map', [
     ([1], [], {0: []}, {0: 1}),
     ([1, 2], [(1, 2)], {0: [1], 1: [0]}, {0: 1, 1: 2}),
-    ([6, 4, 2], [(2, 6), (4, 6)], {0: [2, 1], 1: [0], 2: [0]}, {0: 6, 1: 4, 2: 2}),
-    (
-        ['a', 'b', 'c', 0],
-        [('a', 'b'), ('b', 'c'), ('c', 'a')],
-        {0: [1, 2], 1: [0, 2], 2: [1, 0], 3: []},
-        {0: 'a', 1: 'b', 2: 'c', 3: 0}
-    ),
+    ([2, 4, 6], [(2, 6), (4, 6)], {0: [2], 1: [2], 2: [0, 1]}, {0: 2, 1: 4, 2: 6}),
+    ([4, 6, 2], [(2, 6), (4, 6)], {0: [2], 1: [2], 2: [0, 1]}, {0: 2, 1: 4, 2: 6}),
+    ([6, 4, 2], [(2, 6), (4, 6)], {0: [2], 1: [2], 2: [0, 1]}, {0: 2, 1: 4, 2: 6}),
 ])
 def test_convert_nx_to_pyn(nx_g_vertices, nx_g_edges, pyn_adj_matrix, expected_pyn_node_map):
     nx_g = nx.Graph()
     nx_g.add_nodes_from(nx_g_vertices)
     nx_g.add_edges_from(nx_g_edges)
-    expected_pyn_g = pyn.Graph(len(nx_g_vertices), directed=False, adjacency_dict=pyn_adj_matrix)
+    expected_pyn_g = pyn.Graph(len(nx_g_vertices), adjacency_dict=pyn_adj_matrix)
     pyn_g, pyn_g_node_map = convert_nx_to_pyn(nx_g)
     assert pyn_g_node_map == expected_pyn_node_map
     assert pyn_g.adjacency_dict == expected_pyn_g.adjacency_dict

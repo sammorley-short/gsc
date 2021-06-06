@@ -59,28 +59,41 @@ def qudit_graph_map(nx_wg, partition=None):
     return nx_cg, coloring
 
 
-def convert_nx_to_pyn(nx_g, partition=None):
+def convert_nx_to_pyn(nx_g, coloring=None):
     """
-        Takes a NetworkX graph and outputs a PyNauty graph.
-        If graph has dimension > 2, converts into layered coloured graph
+    Takes a NetworkX graph and outputs a PyNauty graph and a relabelling
+
+    Args:
+        nx_g (networkx.Graph): A NetworkX graph.
+        coloring (optional, list of lists): The grouping of nodes by color. Should be a list of lists of node
+            names where nodes are grouped by colour. For colorless graphs, set to ``None`` (default).
+
+    Returns:
+        pynauty.Graph: The equivalent PyNauty graph. Note that this graph will have integer labels.
+        dict: The node map from integer nodes in the PyNauty graph to nodes in the NetworkX graph.
     """
-    # If graph represents nD qudit graph, map to coloured layer graph
-    coloring = []
-    if nx_g.__dict__.get('dimension', 2) > 2:
-        nx_g, coloring = qudit_graph_map(nx_g, partition)
+    # Check graph is 2D
+    if nx_g.__dict__.get('dimension', 2) != 2:
+        raise RuntimeError('Input graphs must have dimension equal to 2')
+    coloring = coloring or []
+
     # Relabels nodes with integers for compatibility with Pynauty
-    nodes, neighs = list(zip(*nx_g.adjacency()))
+    nodes = sorted(nx_g.nodes())
+    neighs = [sorted(nx_g.adj[node]) for node in nodes]
     to_int_node_map = {n: i for i, n in enumerate(nodes)}
     relabel = to_int_node_map.get
-    nodes = map(relabel, nodes)
-    neighs = [list(map(relabel, node_neighs.keys())) for node_neighs in neighs]
-    coloring = [set(map(relabel, colour)) for colour in coloring]
+    int_nodes = list(map(relabel, nodes))
+    int_neighs = [list(map(relabel, node_neighs)) for node_neighs in neighs]
+    int_coloring = [set(map(relabel, colour)) for colour in coloring]
+
     # Creates Pynauty graph
-    graph_adj = {node: node_neighs for node, node_neighs in zip(nodes, neighs)}
-    n_v = len(graph_adj)
-    pyn_g = pyn.Graph(n_v, directed=False, adjacency_dict=graph_adj, vertex_coloring=coloring)
+    graph_adj = dict(zip(int_nodes, int_neighs))
+    n_v = len(int_nodes)
+    pyn_g = pyn.Graph(n_v, adjacency_dict=graph_adj, vertex_coloring=int_coloring)
+
     # Finds inverse node labelling
-    from_int_node_map = {i: n for n, i in to_int_node_map.items()}
+    from_int_node_map = invert_dict(to_int_node_map)
+
     return pyn_g, from_int_node_map
 
 
