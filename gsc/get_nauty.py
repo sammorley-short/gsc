@@ -78,8 +78,7 @@ def convert_nx_to_pyn(nx_g, partition=None):
     # Creates Pynauty graph
     graph_adj = {node: node_neighs for node, node_neighs in zip(nodes, neighs)}
     n_v = len(graph_adj)
-    pyn_g = pyn.Graph(n_v, directed=False, adjacency_dict=graph_adj,
-                      vertex_coloring=coloring)
+    pyn_g = pyn.Graph(n_v, directed=False, adjacency_dict=graph_adj, vertex_coloring=coloring)
     # Finds inverse node labelling
     from_int_node_map = {i: n for n, i in to_int_node_map.items()}
     return pyn_g, from_int_node_map
@@ -101,11 +100,13 @@ def hash_graph(graph):
 
 def canonical_relabel(nx_g):
     """ Returns isomorphic graph with canonical relabelling """
-    nodes, neighs = zip(*nx_g.adjacency())
+    nodes, _ = zip(*nx_g.adjacency())
     pyn_g, node_map = convert_nx_to_pyn(nx_g)
     canon_lab = pyn.canon_label(pyn_g)
-    canon_relab = {node_map[o_node]: i_node for i_node, o_node
-                   in zip(nodes, canon_lab)}
+    canon_relab = {
+        node_map[o_node]: i_node for i_node, o_node
+        in zip(nodes, canon_lab)
+    }
     nx_g_canon = nx.relabel_nodes(nx_g, canon_relab)
     return nx_g_canon
 
@@ -124,8 +125,10 @@ def find_rep_nodes(nx_g):
     for node, equiv in enumerate(orbits):
         node_equivs[node_map[equiv]].append(node_map[node])
     # Removes any LC's that act trivially on the graph (i.e. act on d=1 nodes)
-    node_equivs = {node: equivs for node, equivs in node_equivs.items()
-                   if nx_g.degree(node) > 1}
+    node_equivs = {
+        node: equivs for node, equivs in node_equivs.items()
+        if nx_g.degree[node] > 1
+    }
     # If multigraph, returns orbits of nodes in first layer
     if nx_g.__dict__.get('dimension', 2) > 2:
         node_equivs = {u: [v for l_v, v in equivs if l_v == 0]

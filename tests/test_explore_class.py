@@ -46,10 +46,9 @@ def test_explore_lc_orbit():
         # Creates a random NetworkX graph and it's equivalent GraphState
         g = gen_random_connected_graph(7)
         class_graph = explore_lc_orbit(g, verbose=False)
-        orbit_hashes = set([graph['hash'] for graph
-                            in class_graph.node.values()])
-        assert len(class_graph.node) == len(orbit_hashes)
-        graphs = [graph['nx_graph'] for graph in class_graph.node.values()]
+        orbit_hashes = {graph['hash'] for graph in class_graph.nodes.values()}
+        assert len(class_graph.nodes) == len(orbit_hashes)
+        graphs = [graph['nx_graph'] for graph in class_graph.nodes.values()]
         for i in range(10):
             graph_a = random.choice(graphs)
             graph_b = random.choice(graphs)
