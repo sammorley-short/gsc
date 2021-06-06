@@ -1,5 +1,7 @@
 # Python packages
+import random
 import numpy as np
+import networkx as nx
 from math import sqrt
 from itertools import chain, combinations
 from collections import defaultdict
@@ -27,7 +29,7 @@ def circular_positions(nodes, r):
     n = len(nodes)
     thetas = np.linspace(0, 2 * pi, n)[:-1]
     x_y_pos = [(nodes[0], (0, 0))]
-    x_y_pos += [(node, (r*cos(theta), r*sin(theta)))
+    x_y_pos += [(node, (r * cos(theta), r * sin(theta)))
                 for node, theta in zip(nodes[1:], thetas)]
     x_y_pos = [(node, xyz(*vector_add(node[0], shift)))
                for node, shift in x_y_pos]
@@ -94,3 +96,20 @@ def is_prime(a):
         if a % x == 0:
             return False
     return True
+
+
+def random_relabel(graph):
+    """ Returns a randomly relabelled graph """
+    nodes = list(graph.nodes())
+    relab_nodes = list(graph.nodes())
+    random.shuffle(relab_nodes)
+    relabel = dict(zip(nodes, relab_nodes))
+    return nx.relabel_nodes(graph, relabel)
+
+
+def gen_random_connected_graph(n, p=0.1):
+    """ Generates a Erdos-Renyi G_n,p random graph """
+    g = nx.fast_gnp_random_graph(n, p)
+    while not nx.is_connected(g):
+        g = nx.fast_gnp_random_graph(n, p)
+    return g
