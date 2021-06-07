@@ -8,10 +8,13 @@ from gsc.explore_lc_orbit import qubit_LC
 from gsc.graph_builders import create_prime_power_graph
 from gsc.utils import canonical_edge_order, random_relabel, gen_random_connected_graph
 
+TEST_REPS = 50
+LARGE_GRAPH_SIZES = [8, 9, 10]
+SMALL_GRAPH_SIZES = [4, 5, 6]
 
-@pytest.mark.parametrize('n_v', [8, 9, 10])
+@pytest.mark.parametrize('n_v', LARGE_GRAPH_SIZES)
 def test_find_rep_nodes(n_v):
-    for _ in range(100):
+    for _ in range(TEST_REPS):
         g = gen_random_connected_graph(n_v)
         g_equivs = find_rep_nodes(g)
         for _, equiv_nodes in g_equivs.items():
@@ -20,25 +23,25 @@ def test_find_rep_nodes(n_v):
             assert len(lc_equiv_hashes) == 1
 
 
-@pytest.mark.parametrize('n_v', [8, 9, 10])
+@pytest.mark.parametrize('n_v', LARGE_GRAPH_SIZES)
 def test_hash_graph(n_v):
-    for _ in range(100):
+    for _ in range(TEST_REPS):
         g = gen_random_connected_graph(n_v)
         relab_g = random_relabel(g)
         assert hash_graph(g) == hash_graph(relab_g)
 
 
-@pytest.mark.parametrize('n_v', [8, 9, 10])
+@pytest.mark.parametrize('n_v', LARGE_GRAPH_SIZES)
 def test_random_relabel(n_v):
-    for _ in range(100):
+    for _ in range(TEST_REPS):
         g = gen_random_connected_graph(n_v)
         relab_g = random_relabel(g)
         assert nx.is_isomorphic(g, relab_g)
 
 
-@pytest.mark.parametrize('n_v', [4, 5, 6])
+@pytest.mark.parametrize('n_v', SMALL_GRAPH_SIZES)
 def test_canonical_relabel_random(n_v):
-    for _ in range(100):
+    for _ in range(TEST_REPS):
         g = gen_random_connected_graph(n_v)
         relab_g = random_relabel(g)
         canon_g = canonical_relabel(g)
@@ -79,7 +82,7 @@ def test_prime_power_hash_examples_2_2(edges_1, edges_2, are_equivalent):
     graph_1 = create_prime_power_graph(edges_1, prime, power)
     graph_2 = create_prime_power_graph(edges_2, prime, power)
     if are_equivalent:
-    assert hash_graph(graph_1) == hash_graph(graph_2)
+        assert hash_graph(graph_1) == hash_graph(graph_2)
     else:
         assert hash_graph(graph_1) != hash_graph(graph_2)
 
