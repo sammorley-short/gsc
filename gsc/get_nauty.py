@@ -87,8 +87,8 @@ def find_rep_nodes(nx_g):
     up to automorphism
     """
     # Creates PyNauty graph and passes it to PyNauty to get orbits
-    partition = 'member' if nx_g.__dict__.get('power', 1) > 1 else None
-    if nx_g.__dict__.get('dimension', 2) != 2:
+    partition = 'member' if graph_power(nx_g) > 1 else None
+    if graph_dimension(nx_g) != 2:
         nx_g, coloring = map_to_qudit_graph(nx_g, partition)
     else:
         coloring = []
@@ -104,7 +104,7 @@ def find_rep_nodes(nx_g):
         if nx_g.degree[node] > 1
     }
     # If multigraph, returns orbits of nodes in first layer
-    if nx_g.__dict__.get('dimension', 2) > 2:
+    if graph_dimension(nx_g) > 2:
         node_equivs = {u: [v for l_v, v in equivs if l_v == 0]
                        for (l_u, u), equivs in node_equivs.items() if l_u == 0}
     return node_equivs
