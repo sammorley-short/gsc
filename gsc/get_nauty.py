@@ -16,46 +16,85 @@ def qudit_graph_map(nx_wg, partition=None):
     us, vs, weights = zip(*nx_wg.edges.data('weight'))
     n_layers = int(log(max(weights), 2)) + 1
     layers = range(n_layers)
+
     # If node is prime power, applies colouring across same member-nodes
     if nx_wg.__dict__.get('power', 1) > 1:
         _, m, f = nx_wg.prime, nx_wg.power, nx_wg.families
+
         # Partitions based on which member of the family node is
         if partition == 'member':
-            coloring = [[(l, (n, i)) for n in range(f)]
-                        for l in layers for i in range(m)]
+            coloring = [
+                [
+                    (l, (n, i))
+                    for n in range(f)
+                ]
+                for l in layers
+                for i in range(m)
+            ]
+
         # Partitions based on which family => must make colourings equiv.
         elif partition == 'family':
+
             # Adds extra nodes to represent exchangeable colours
             # (see page 60 of nauty user guide v26)
             nx_wg = copy_graph(nx_wg)
             for u in range(f):
                 node = (u, m)
                 nx_wg.add_node(node)
-                nx_wg.add_weighted_edges_from([(node, (u, i), 1)
-                                               for i in range(m)])
-            coloring = [[(l, (n, i)) for n in range(f) for i in range(m)]
-                        for l in layers] + \
-                       [[(l, (n, m)) for n in range(f)] for l in layers]
+                nx_wg.add_weighted_edges_from([
+                    (node, (u, i), 1)
+                    for i in range(m)
+                ])
+            coloring = [
+                [
+                    (l, (n, i))
+                    for n in range(f)
+                    for i in range(m)
+                ]
+                for l in layers
+            ] + [
+                [
+                    (l, (n, m))
+                    for n in range(f)
+                ]
+                for l in layers
+            ]
+
         else:
             raise Exception("Unknown colour scheme provided")
+
     else:
-        coloring = [[(l, n) for n in nx_wg.nodes()] for l in layers]
+        coloring = [
+            [(l, n) for n in nx_wg.nodes()]
+            for l in layers
+        ]
+
     # Creates layered graph with vertical edges
     nx_cg = nx.Graph()
-    v_nodes = [(l, n) for l in layers for n in nx_wg.nodes()]
+    v_nodes = [
+        (l, n)
+        for l in layers
+        for n in nx_wg.nodes()
+    ]
     nx_cg.add_nodes_from(v_nodes)
-    v_edges = [((l, n), (l + 1, n))
-               for n in nx_wg.nodes() for l in layers[:-1]]
+    v_edges = [
+        ((l, n), (l + 1, n))
+        for n in nx_wg.nodes()
+        for l in layers[:-1]
+    ]
     nx_cg.add_edges_from(v_edges)
+
     # Add edges within layers
     for u, v, w in nx_wg.edges.data('weight'):
         # Gets binary rep. of weight, padded with zeros (written L to R)
         bin_w = int_to_bits(w)[::-1]
         bin_w = bin_w + (n_layers - len(bin_w)) * [0]
+
         # Converts binary weight to list of layers and adds edges to graph
         edge_layers = [l for l, b in enumerate(bin_w) if b]
         edges = [((l, u), (l, v)) for l in edge_layers]
         nx_cg.add_edges_from(edges)
+
     return nx_cg, coloring
 
 
