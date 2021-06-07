@@ -135,7 +135,11 @@ def find_rep_nodes(nx_g):
     """
     # Creates PyNauty graph and passes it to PyNauty to get orbits
     partition = 'member' if nx_g.__dict__.get('power', 1) > 1 else None
-    pyn_g, node_map = convert_nx_to_pyn(nx_g, partition=partition)
+    if nx_g.__dict__.get('dimension', 2) != 2:
+        nx_g, coloring = qudit_graph_map(nx_g, partition)
+    else:
+        coloring = []
+    pyn_g, node_map = convert_nx_to_pyn(nx_g, coloring=coloring)
     _, _, _, orbits, _ = pyn.autgrp(pyn_g)
     # Finds node equivalency dictionary
     node_equivs = defaultdict(list)
