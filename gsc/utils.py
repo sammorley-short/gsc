@@ -126,3 +126,15 @@ def compile_maps(maps):
 
 def invert_dict(dct):
     return {i: n for n, i in dct.items()}
+
+
+def graph_prime(nx_g):
+    return nx_g.__dict__.get('prime', 2)
+
+
+def graph_power(nx_g):
+    return nx_g.__dict__.get('power', 1)
+
+
+def graph_dimension(nx_g):
+    return nx_g.__dict__.get('dimension', graph_prime(nx_g) ** graph_power(nx_g))
