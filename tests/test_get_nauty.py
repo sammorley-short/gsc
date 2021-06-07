@@ -48,33 +48,40 @@ def test_canonical_relabel_random(n_v):
         assert canon_edges == canon_relab_edges
 
 
-@pytest.mark.parametrize('edges_1, edges_2', [
+@pytest.mark.parametrize('edges_1, edges_2, are_equivalent', [
     # Tests that two C-shaped prime power graphs are equivalent
     (
         [((0, 1), (1, 1), 1), ((1, 0), (0, 0), 1), ((0, 0), (0, 1), 1)],
         [((0, 1), (1, 1), 1), ((1, 0), (0, 0), 1), ((1, 0), (1, 1), 1)],
+        True
     ),
     # Tests upper ququart bar and lower ququart bar inequivalent
     (
         [((1, 0), (0, 0), 1)],
-        [((0, 1), (1, 1), 1)]
+        [((0, 1), (1, 1), 1)],
+        False
     ),
     # Tests both ququart zigzags are equivalent
     (
         [((0, 1), (1, 1), 1), ((1, 0), (0, 0), 1), ((0, 0), (1, 1), 1)],
-        [((0, 1), (1, 1), 1), ((1, 0), (0, 0), 1), ((0, 1), (1, 0), 1)]
+        [((0, 1), (1, 1), 1), ((1, 0), (0, 0), 1), ((0, 1), (1, 0), 1)],
+        True
     ),
     # Checks two-bar and rotated two-bar ququarts are inequivalent
     (
         [((0, 1), (1, 1), 1), ((0, 0), (1, 0), 1)],
-        [((0, 0), (0, 1), 1), ((1, 0), (1, 1), 1)]
+        [((0, 0), (0, 1), 1), ((1, 0), (1, 1), 1)],
+        False
     ),
 ])
-def test_prime_power_hash_examples_2_2(edges_1, edges_2):
+def test_prime_power_hash_examples_2_2(edges_1, edges_2, are_equivalent):
     prime, power = 2, 2
     graph_1 = create_prime_power_graph(edges_1, prime, power)
     graph_2 = create_prime_power_graph(edges_2, prime, power)
+    if are_equivalent:
     assert hash_graph(graph_1) == hash_graph(graph_2)
+    else:
+        assert hash_graph(graph_1) != hash_graph(graph_2)
 
 
 @pytest.mark.parametrize('nx_g_vertices, nx_g_edges, pyn_adj_matrix, expected_pyn_node_map', [
