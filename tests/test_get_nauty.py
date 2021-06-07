@@ -36,29 +36,6 @@ def test_random_relabel(n_v):
         assert nx.is_isomorphic(g, relab_g)
 
 
-@pytest.mark.parametrize('nodes, edges, expected_edges', [
-    ([], [], []),
-    ([0], [], []),
-    ([0, 1, 2], [], []),
-    ([0, 1, 2], [(0, 1)], [(2, 1)]),
-    ([0, 1, 2], [(0, 1), (1, 2)], [(2, 1), (2, 0)]),
-])
-def test_canonical_relabel(nodes, edges, expected_edges):
-    # Setup test graph
-    g = nx.Graph()
-    g.add_nodes_from(nodes)
-    g.add_edges_from(edges)
-
-    # Setup expected graph
-    expected_canon_g = nx.Graph()
-    expected_canon_g.add_nodes_from(nodes)
-    expected_canon_g.add_edges_from(expected_edges)
-
-    # Relabel graph and test
-    canon_g = canonical_relabel(g)
-    assert canon_g.adj == expected_canon_g.adj
-
-
 @pytest.mark.parametrize('n_v', [4, 5, 6])
 def test_canonical_relabel_random(n_v):
     for _ in range(100):
