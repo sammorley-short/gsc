@@ -19,10 +19,10 @@ def random_connected_graph(n):
     return g
 
 
-def linear_graph(l):
+def linear_graph(length):
     """ Creates a linear graph with 2D coordinates """
     g = nx.Graph()
-    edges = [((i, 0), (i + 1, 0)) for i in range(l - 1)]
+    edges = [((i, 0), (i + 1, 0)) for i in range(length - 1)]
     g.add_edges_from(edges)
     return g
 
