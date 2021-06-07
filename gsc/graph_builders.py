@@ -92,7 +92,7 @@ def create_prime_power_graph(w_edges, prime, power):
     """ Creates a weighted graph representing a prime qudit graph state """
     nx_wg = create_prime_graph(w_edges, prime)
     nx_wg.power, nx_wg.dimension = power, prime ** power
-    fam_labels = list(set([n for n, i in nx_wg.nodes()]))
+    fam_labels = list({n for n, i in nx_wg.nodes()}))
     nx_wg.families = len(fam_labels)
     fam_nodes = [(n, i) for n in fam_labels for i in range(power)]
     # Adds any nodes that weren't in the edge list
