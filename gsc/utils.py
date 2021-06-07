@@ -104,7 +104,7 @@ def random_relabel(graph):
     relab_nodes = list(graph.nodes())
     random.shuffle(relab_nodes)
     relabel = dict(zip(nodes, relab_nodes))
-    return nx.relabel_nodes(graph, relabel).copy()
+    return nx.relabel_nodes(graph, relabel)
 
 
 def gen_random_connected_graph(n, p=0.1):
