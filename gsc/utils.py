@@ -104,7 +104,7 @@ def random_relabel(graph):
     relab_nodes = list(graph.nodes())
     random.shuffle(relab_nodes)
     relabel = dict(zip(nodes, relab_nodes))
-    return nx.relabel_nodes(graph, relabel)
+    return nx.relabel_nodes(graph, relabel).copy()
 
 
 def gen_random_connected_graph(n, p=0.1):
@@ -113,3 +113,16 @@ def gen_random_connected_graph(n, p=0.1):
     while not nx.is_connected(g):
         g = nx.fast_gnp_random_graph(n, p)
     return g
+
+
+def compile_maps(maps):
+    """ Takes a sequence of dictionary maps and compiles them to a single map. """
+    full_map = maps.pop(0)
+    while maps:
+        next_map = maps.pop(0)
+        full_map = {key: next_map[value] for key, value in full_map.items()}
+    return full_map
+
+
+def invert_dict(dct):
+    return {i: n for n, i in dct.items()}

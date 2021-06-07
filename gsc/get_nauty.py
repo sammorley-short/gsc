@@ -4,7 +4,7 @@ import networkx as nx
 import pynauty as pyn
 from collections import defaultdict
 # Local modules
-from gsc.utils import int_to_bits, copy_graph
+from gsc.utils import int_to_bits, copy_graph, compile_maps, invert_dict
 
 
 def qudit_graph_map(nx_wg, partition=None):
@@ -113,15 +113,19 @@ def hash_graph(graph):
 
 def canonical_relabel(nx_g):
     """ Returns isomorphic graph with canonical relabelling """
-    nodes, _ = zip(*nx_g.adjacency())
-    pyn_g, node_map = convert_nx_to_pyn(nx_g)
-    canon_lab = pyn.canon_label(pyn_g)
-    canon_relab = {
-        node_map[o_node]: i_node for i_node, o_node
-        in zip(nodes, canon_lab)
-    }
-    nx_g_canon = nx.relabel_nodes(nx_g, canon_relab)
-    return nx_g_canon
+    # For edgeless graphs, just return a simple copy
+    if not nx_g.edges():
+        return nx_g.copy()
+
+    # Generate PyNauty graph and canonically relabel
+    pyn_g, pyn_to_nx_relab = convert_nx_to_pyn(nx_g)
+    nx_to_pyn_relab = invert_dict(pyn_to_nx_relab)
+
+    # Find out relabelling in integer picture and compile overall relabelling
+    pyn_canon_relab = invert_dict(dict(enumerate(pyn.canon_label(pyn_g))))
+    nx_canon_relab = compile_maps([nx_to_pyn_relab, pyn_canon_relab, pyn_to_nx_relab])
+
+    return nx.relabel_nodes(nx_g, nx_canon_relab)
 
 
 def find_rep_nodes(nx_g):
