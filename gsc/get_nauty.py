@@ -60,12 +60,12 @@ def hash_graph(graph):
 
 
 def _hash_graph_prime_power_non_trivial(graph):
-        nx_g_mem, nx_g_mem_coloring = map_to_qudit_graph(graph, partition='member')
-        nx_g_fam, nx_g_fam_coloring = map_to_qudit_graph(graph, partition='family')
-        pyn_g_mem, _ = convert_nx_to_pyn(nx_g_mem, coloring=nx_g_mem_coloring)
-        pyn_g_fam, _ = convert_nx_to_pyn(nx_g_fam, coloring=nx_g_fam_coloring)
-        g_mem_hash = hash(pyn.certificate(pyn_g_mem))
-        g_fam_hash = hash(pyn.certificate(pyn_g_fam))
+    nx_g_mem, nx_g_mem_coloring = map_to_qudit_graph(graph, partition='member')
+    nx_g_fam, nx_g_fam_coloring = map_to_qudit_graph(graph, partition='family')
+    pyn_g_mem, _ = convert_nx_to_pyn(nx_g_mem, coloring=nx_g_mem_coloring)
+    pyn_g_fam, _ = convert_nx_to_pyn(nx_g_fam, coloring=nx_g_fam_coloring)
+    g_mem_hash = hash(pyn.certificate(pyn_g_mem))
+    g_fam_hash = hash(pyn.certificate(pyn_g_fam))
     return hash((g_mem_hash, g_fam_hash))
 
 
@@ -76,7 +76,7 @@ def _hash_graph_prime_power_trivial(graph):
 
 
 def _hash_graph_2D(graph):
-        pyn_g, _ = convert_nx_to_pyn(graph)
+    pyn_g, _ = convert_nx_to_pyn(graph)
     return hash(pyn.certificate(pyn_g))
 
 

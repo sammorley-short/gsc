@@ -12,6 +12,7 @@ TEST_REPS = 50
 LARGE_GRAPH_SIZES = [8, 9, 10]
 SMALL_GRAPH_SIZES = [4, 5, 6]
 
+
 @pytest.mark.parametrize('n_v', LARGE_GRAPH_SIZES)
 def test_find_rep_nodes(n_v):
     for _ in range(TEST_REPS):

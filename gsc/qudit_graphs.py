@@ -2,10 +2,7 @@
 from math import log
 import networkx as nx
 # Local modules
-from gsc.utils import (
-    int_to_bits, copy_graph,
-    graph_prime, graph_power
-)
+from gsc.utils import int_to_bits, copy_graph, graph_power
 
 
 def map_to_qudit_graph(nx_wg, partition=None):
