@@ -6,7 +6,7 @@ import itertools as it
 # Local modules
 from gsc.utils import canonical_edge_order, flatten, powerset
 
-bin2gate = {(1, 0, 0, 1): 'I', (0, 1, 1, 0): 'H', (1, 0, 1, 1): 'S',
+BIN2GATE = {(1, 0, 0, 1): 'I', (0, 1, 1, 0): 'H', (1, 0, 1, 1): 'S',
             (1, 1, 1, 0): 'HS', (0, 1, 1, 1): 'SH', (1, 1, 0, 1): 'HSH'}
 
 
@@ -34,8 +34,8 @@ def export_adjacency_matrix(graph, filename):
 
 def to_rref(A):
     """
-        Takes n x m matrix A to it's reduced row echelon form.
-        Algorithm from: https://www.di-mgt.com.au/matrixtransform.html
+    Takes n x m matrix A to it's reduced row echelon form.
+    Algorithm from: https://www.di-mgt.com.au/matrixtransform.html
     """
     n, m = A.shape
     j = 0
@@ -62,10 +62,9 @@ def to_rref(A):
 
 def GF2nullspace(A):
     """
-        Finds nullspace of A using RREF(A).
-        Follows decription here:
-        https://math.stackexchange.com/questions/130207/
-        finding-null-space-basis-over-a-finite-field
+    Finds nullspace of A using RREF(A).
+    Follows decription here:
+    https://math.stackexchange.com/questions/130207/finding-null-space-basis-over-a-finite-field
     """
     # Takes A to reduced row echelon form and removes any all-zero rows
     A = to_rref(A)
@@ -90,8 +89,8 @@ def GF2nullspace(A):
 
 def are_lc_equiv(g1, g2):
     """
-        Tests whether two graphs are equivalent up to local complementation.
-        If True, also returns every unitary such that |g2> = U|g1>.
+    Tests whether two graphs are equivalent up to local complementation.
+    If True, also returns every unitary such that |g2> = U|g1>.
     """
     # Gets adjacency matrices and returns false if differing bases
     am1, k1 = get_adjacency_matrix(g1)
@@ -131,7 +130,7 @@ def are_lc_equiv(g1, g2):
     V = [np.reshape(v, (no_qubits, 4)) for v in V]
     V = [v for v in V if all((a * d + b * c) % 2 == 1 for a, b, c, d in v)]
     if V:
-        V = [[bin2gate[tuple(r)] for r in v] for v in V]
+        V = [[BIN2GATE[tuple(r)] for r in v] for v in V]
         return True, V
     else:
         return False, None
