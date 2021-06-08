@@ -5,7 +5,7 @@ import pynauty as pyn
 # Local modules
 from .utils import (
     compile_maps, invert_dict,
-    graph_power, graph_dimension
+    graph_prime, graph_power, graph_dimension
 )
 from .qudit_graphs import map_to_qudit_graph
 
@@ -51,17 +51,33 @@ def convert_nx_to_pyn(nx_g, coloring=None):
 def hash_graph(graph):
     """ Returns a hash for the graph based on PyNauty's certificate fn """
     if graph_power(graph) > 1:
+        return _hash_graph_prime_power_non_trivial(graph)
+
+    if graph_prime(graph) > 2:
+        return _hash_graph_prime_power_trivial(graph)
+
+    return _hash_graph_2D(graph)
+
+
+def _hash_graph_prime_power_non_trivial(graph):
         nx_g_mem, nx_g_mem_coloring = map_to_qudit_graph(graph, partition='member')
         nx_g_fam, nx_g_fam_coloring = map_to_qudit_graph(graph, partition='family')
         pyn_g_mem, _ = convert_nx_to_pyn(nx_g_mem, coloring=nx_g_mem_coloring)
         pyn_g_fam, _ = convert_nx_to_pyn(nx_g_fam, coloring=nx_g_fam_coloring)
         g_mem_hash = hash(pyn.certificate(pyn_g_mem))
         g_fam_hash = hash(pyn.certificate(pyn_g_fam))
-        g_hash = hash((g_mem_hash, g_fam_hash))
-    else:
+    return hash((g_mem_hash, g_fam_hash))
+
+
+def _hash_graph_prime_power_trivial(graph):
+    qudit_g, coloring = map_to_qudit_graph(graph)
+    pyn_g, _ = convert_nx_to_pyn(qudit_g, coloring=coloring)
+    return hash(pyn.certificate(pyn_g))
+
+
+def _hash_graph_2D(graph):
         pyn_g, _ = convert_nx_to_pyn(graph)
-        g_hash = hash(pyn.certificate(pyn_g))
-    return g_hash
+    return hash(pyn.certificate(pyn_g))
 
 
 def canonical_relabel(nx_g):
