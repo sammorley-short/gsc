@@ -232,10 +232,9 @@ def explore_lc_orbit(init_graph, save_edges=True, verbose=True):
         edges = data['edges']
 
         if prime ** power > 2:
-            data['edges'] = [(u, v, graph[u][v]['weight']) for u, v in edges]
-
+            data['edges'] = sorted([(u, v, graph[u][v]['weight']) for u, v in edges])
         else:
-            data['edges'] = [(u, v, 1) for u, v in edges]
+            data['edges'] = sorted([(u, v, 1) for u, v in edges])
 
     return class_graph
 
@@ -285,6 +284,7 @@ def export_class_graph(class_graph, filename, min_edge_reps=False):
         mer_filename = filename + '_MERs.json'
         with open(mer_filename, 'w') as fp:
             json.dump(min_edge_reps, fp)
+
     return class_graph_data
 
 
