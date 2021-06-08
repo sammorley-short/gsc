@@ -81,9 +81,8 @@ def _create_qudit_graph(nx_wg):
 
 def _get_prime_power_coloring(nx_wg, partition):
     # If node is prime power, applies colouring across same member-nodes
-    if graph_prime(nx_wg) == 1:
+    if graph_power(nx_wg) == 1:
         return _get_prime_power_coloring_trivial_power(nx_wg)
-    else:
         return _get_prime_power_coloring_non_trivial_power(nx_wg, partition)
 
 
